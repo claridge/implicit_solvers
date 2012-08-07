@@ -21,58 +21,39 @@ CLAW_PLOTDIR = _plots               # Directory for plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS =
+FFLAGS = -O3
 
 
 # ---------------------------------
 # List of sources for this program:
 # ---------------------------------
 
+IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
-	apply_linearized_pde_operator.f90 \
-	apply_pde_operator.f90 \
-	bc1.f90 \
-	boundary_conditions.f90 \
-	qinit.f90 \
-	rp1.f90 \
-	setprob.f90 \
-	src1.f90 \
-	../lib/1d/apply_newton_operator.f90 \
-	../lib/1d/driver.f90 \
-	../lib/1d/inner_product.f90 \
-	../lib/1d/solve_newton_system_bicgstab.f90 \
-	../lib/1d/take_backward_euler_step.f90 \
-	../lib/1d/take_crank_nicolson_step.f90 \
-	../lib/1d/take_forward_euler_step.f90 \
-	../lib/LAPACK/dgtsv.f \
-  ../lib/LAPACK/dgbsv.f \
-  ../lib/LAPACK/dgbtf2.f \
-  ../lib/LAPACK/dgbtrf.f \
-  ../lib/LAPACK/dgbtrs.f \
-  ../lib/LAPACK/dlaswp.f \
-  ../lib/LAPACK/ilaenv.f \
-  ../lib/LAPACK/ieeeck.f \
-  ../lib/LAPACK/iparmq.f \
-  ../lib/BLAS/idamax.f \
-  ../lib/BLAS/lsame.f \
-  ../lib/BLAS/dger.f \
-  ../lib/BLAS/xerbla.f \
-  ../lib/BLAS/dscal.f \
-  ../lib/BLAS/dgemm.f \
-  ../lib/BLAS/dswap.f \
-  ../lib/BLAS/dtbsv.f \
-  ../lib/BLAS/dcopy.f \
-  ../lib/BLAS/dgemv.f \
-  ../lib/BLAS/dtrsm.f
-
+  apply_linearized_pde_operator.f90 \
+  apply_pde_operator.f90 \
+  bc1.f90 \
+  boundary_conditions.f90 \
+  qinit.f90 \
+  rp1.f90 \
+  setprob.f90 \
+  src1.f90 \
+  $(IMPLICIT_LIB)/apply_newton_operator.f90 \
+  $(IMPLICIT_LIB)/driver.f90 \
+  $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/inner_product.f90 \
+  $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
+  $(IMPLICIT_LIB)/take_backward_euler_step.f90 \
+  $(IMPLICIT_LIB)/take_crank_nicolson_step.f90 \
+  $(IMPLICIT_LIB)/take_forward_euler_step.f90
 
 
 # Clawpack libraries to be used:
 CLAW_LIB = $(CLAW)/clawpack/1d/lib
 
 CLAW_LIBSOURCES = \
-	$(CLAW_LIB)/b4step1.f \
+  $(CLAW_LIB)/b4step1.f \
   $(CLAW_LIB)/claw1.f \
   $(CLAW_LIB)/claw1ez.f \
   $(CLAW_LIB)/copyq1.f \

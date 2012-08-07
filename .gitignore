@@ -3,3 +3,7 @@
 
 # Emacs backup files
 *~
+
+# Clawpack data (problem parameter) files
+claw.data
+setrun.data

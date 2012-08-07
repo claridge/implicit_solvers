@@ -32,12 +32,11 @@ end subroutine b4step1
 
 
 subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
-               q_left, q_right, aux_left, aux_right,  &
+               q, q_unused, aux, aux_unused,  &
                waves, wave_speeds, a_minus_dq, a_plus_dq)
 
 ! Riemann solver for hyperbolic part of the thin film/surfactant problem.
 !
-! TODO: Decide if I'm sticking with 'q' and 'q_unused'.
 ! Args:
 !   maxmx: Max number of interior cells.  Remnant of F77, where array dimensions
 !     had to be specified at compile time.  If using provided driver, it's safe
@@ -61,8 +60,8 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
     implicit none
 
     integer, intent(in) :: maxmx, meqn, mwaves, mbc, mx
-    double precision, dimension(1-mbc:maxmx+mbc,meqn), intent(in) :: q_left, q_right
-    double precision, dimension(1-mbc:maxmx+mbc, *), intent(inout) :: aux_left, aux_right
+    double precision, dimension(1-mbc:maxmx+mbc,meqn), intent(in) :: q, q_unused
+    double precision, dimension(1-mbc:maxmx+mbc, *), intent(inout) :: aux, aux_unused
     double precision, dimension(1-mbc:maxmx+mbc, meqn, mwaves), intent(out) :: waves
     double precision, dimension(1-mbc:maxmx+mbc, mwaves), intent(out) :: wave_speeds
     double precision, dimension(1-mbc:maxmx+mbc, meqn), intent(out) ::  &
@@ -74,10 +73,10 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
 
     !---> Film height --->
     do i=2-mbc,mx+mbc
-        velocity_left = aux_left(i-1, 1)
-        velocity_right = aux_left(i, 1)
+        velocity_left = aux(i-1, 1)
+        velocity_right = aux(i, 1)
         
-        !---- This wave doesn't affect the surfactant ----
+        ! This wave doesn't affect the surfactant
         waves(i, 2, 1) = 0.d0
 
         !---- Speed and fluctuations ----
@@ -90,22 +89,22 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
             ! to the flux function
             !       f(q,x) = 1/2 * u(x) * q**2
             !-------------------------------------------------------------------
-            waves(i,1,1) = velocity_right*q_left(i,1)**2/2.d0 -  &
-                           velocity_left*q_right(i-1,1)**2/2.d0
-            wave_speeds(i,1) = .5d0 * (velocity_right*q_left(i,1) +  &
-                               sqrt(velocity_right*velocity_left)*q_right(i-1,1))
+            waves(i,1,1) = velocity_right*q(i,1)**2/2.d0 -  &
+                           velocity_left*q(i-1,1)**2/2.d0
+            wave_speeds(i,1) = .5d0 * (velocity_right*q(i,1) +  &
+                               sqrt(velocity_right*velocity_left)*q(i-1,1))
             a_minus_dq(i,1) = 0.d0
             a_plus_dq(i,1) = waves(i,1,1)
 
         else if ((velocity_left<=0.d0) .and. (velocity_right<=0.d0)) then
-            waves(i,1,1) = velocity_right*q_left(i,1)**2/2.d0 -  &
-                           velocity_left*q_right(i-1,1)**2/2.d0
-            wave_speeds(i,1) = .5d0 * (-sqrt(velocity_right*velocity_left)*q_left(i,1)  &
-                               + velocity_left*q_right(i-1,1))
+            waves(i,1,1) = velocity_right*q(i,1)**2/2.d0 -  &
+                           velocity_left*q(i-1,1)**2/2.d0
+            wave_speeds(i,1) = .5d0 * (-sqrt(velocity_right*velocity_left)*q(i,1)  &
+                               + velocity_left*q(i-1,1))
             a_minus_dq(i,1) = waves(i,1,1)
             a_plus_dq(i,1) = 0.d0
 
-        else  ! Velocities are in different directions
+        else
             !---- Velocities are in different directions ----
             ! In this case, regardless of whether the velocities are moving
             ! towards or away from the interface, there is no flux across the
@@ -114,9 +113,9 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
             ! state of zero flux, and similarly for a_plus_dq regarding cell i.
             !-------------------------------------------------------------------
             waves(i,1,1) = 0.d0
-            wave_speeds(i,1) = 0.d0    !(velocity_left + velocity_right)/2.d0 * (q_left(i,1) + q_right(i-1,1))/2.d0
-            a_minus_dq(i,1) = -velocity_left * q_right(i-1,1)**2/2.d0
-            a_plus_dq(i,1) = velocity_right * q_left(i,1)**2/2.d0
+            wave_speeds(i,1) = 0.d0
+            a_minus_dq(i,1) = -velocity_left * q(i-1,1)**2/2.d0
+            a_plus_dq(i,1) = velocity_right * q(i,1)**2/2.d0
         end if
     end do
     !<--- Film height <---
@@ -124,10 +123,10 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
 
     !---> Surfactant concentration --->
     do i = 2-mbc, mx+mbc
-        velocity_left = aux_left(i-1, 2)
-        velocity_right = aux_left(i, 2)
+        velocity_left = aux(i-1, 2)
+        velocity_right = aux(i, 2)
 
-        !---- This waves doesn't affect the film height ----
+        ! This wave doesn't affect the film height
         waves(i,1,2) = 0.d0
         
         !---- Speed and fluctuations ----
@@ -137,7 +136,7 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
             ! a_plus_dq(i) is nonzero.  The wave_speeds is determined by the lower cell,
             ! as its mass is moving into the interface.
             !------------------------------------------------------------------
-            waves(i,2,2) = velocity_right*q_left(i,2) - velocity_left*q_right(i-1,2) 
+            waves(i,2,2) = velocity_right*q(i,2) - velocity_left*q(i-1,2) 
             wave_speeds(i,2) = velocity_right
             a_minus_dq(i,2)  = 0.d0
             a_plus_dq(i,2)   = waves(i,2,2)
@@ -148,7 +147,7 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
             ! a_minus_dq(i) is nonzero.  The wave_speeds is determined by the upper cell,
             ! as its mass is moving into the interface.
             !-----------------------------------------------------------------
-            waves(i,2,2) = velocity_right*q_left(i,2) - velocity_left*q_right(i-1,2)
+            waves(i,2,2) = velocity_right*q(i,2) - velocity_left*q(i-1,2)
             wave_speeds(i,2) = velocity_left
             a_minus_dq(i,2) = waves(i,2,2)
             a_plus_dq(i,2) = 0.d0
@@ -163,8 +162,8 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
             !-------------------------------------------------------------------
             waves(i,2,2) = 0.d0
             wave_speeds(i,2) = 0.d0    !(velocity_left + velocity_right) / 2.d0
-            a_minus_dq(i,2) = -velocity_left * q_right(i-1,2)
-            a_plus_dq(i,2) = velocity_right * q_left(i,2)
+            a_minus_dq(i,2) = -velocity_left * q(i-1,2)
+            a_plus_dq(i,2) = velocity_right * q(i,2)
         end if
     end do
     !<--- Surfactant concentration <---

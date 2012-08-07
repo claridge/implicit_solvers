@@ -28,6 +28,7 @@ FFLAGS = -llapack -lblas -O3
 # List of sources for this program:
 # ---------------------------------
 
+IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
   apply_linearized_pde_operator.f90 \
@@ -40,15 +41,14 @@ CLAW_SOURCES = \
   setprob.f90 \
   src1.f90 \
   surface_tension_utils.f90 \
-  ../lib/1d/apply_newton_operator.f90 \
-  ../lib/1d/driver.f90 \
-  ../lib/1d/extend_to_ghost_cells.f90 \
-  ../lib/1d/inner_product.f90 \
-  ../lib/1d/solve_newton_system_bicgstab.f90 \
-  ../lib/1d/take_backward_euler_step.f90 \
-  ../lib/1d/take_crank_nicolson_step.f90 \
-  ../lib/1d/take_forward_euler_step.f90 \
-  ../lib/BLAS/lsame.f \
+  $(IMPLICIT_LIB)/apply_newton_operator.f90 \
+  $(IMPLICIT_LIB)/driver.f90 \
+  $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/inner_product.f90 \
+  $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
+  $(IMPLICIT_LIB)/take_backward_euler_step.f90 \
+  $(IMPLICIT_LIB)/take_crank_nicolson_step.f90 \
+  $(IMPLICIT_LIB)/take_forward_euler_step.f90
 
 
 # Clawpack libraries to be used:
