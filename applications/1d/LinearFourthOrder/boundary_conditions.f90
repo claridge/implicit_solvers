@@ -15,8 +15,6 @@ subroutine apply_homogeneous_bcs(q)
     zeros = 0.d0
     call apply_bcs_internal(zeros, zeros, q)
 
-    !call extend_to_ghost_cells('periodic', 'periodic', q)
-
 end subroutine apply_homogeneous_bcs
 
 
@@ -40,8 +38,6 @@ subroutine apply_bcs(t, q)
     double precision, external :: true_solution
     integer :: info
 
-    !call extend_to_ghost_cells('periodic', 'periodic', q)
-
     do i = -1, 2
         x = x_lower + (i - .5d0) * dx
         lower_values(i) = true_solution(x, t)
@@ -51,20 +47,8 @@ subroutine apply_bcs(t, q)
         x = x_lower + (mx + i - .5d0) * dx
         upper_values(i) = true_solution(x, t)
     end do
-
-    ! ! print *, ''
-    ! ! print *, 'Before'
-    ! ! print *, q(-1:2, 1)
-    ! ! print *, q(mx-1:mx+2, 1)
     
     call apply_bcs_internal(lower_values, upper_values, q)
-
-    ! ! print *, ''
-    ! ! print *, 'After'
-    ! ! print *, q(-1:2, 1)
-    ! ! print *, lower_values
-    ! ! print *, q(mx-1:mx+2, 1)
-    ! ! print *, upper_values
 
 end subroutine apply_bcs
 

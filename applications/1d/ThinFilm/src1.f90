@@ -2,35 +2,14 @@ subroutine src1(maxmx, meqn, mbc, mx, x_lower, dx, q, maux, aux, t, dt)
 
     implicit none
 
-    !---> Variables --->        
-    !---- Inputs ----
     integer, intent(in) :: maxmx, meqn, mbc, mx, maux
     double precision, intent(in) :: x_lower, dx, t, dt
     double precision, intent(in) :: aux(1-mbc:maxmx+mbc, maux)
-    
-    !---- Input/output ----
     double precision, intent(inout), dimension(1-mbc:maxmx+mbc, meqn) :: q
 
-    !---- Locals ----
     integer :: n_splits, max_splits, i
     double precision :: t_new, t_local, dt_local
     logical :: success
-
-    integer :: mx_common, mbc_common, meqn_common
-    double precision :: x_lower_common, dx_common
-    common /claw_config/ mx_common, mbc_common, x_lower_common, dx_common,  &
-        meqn_common
-    
-    ! Copy configuration constants into common block.  This only actually needs
-    ! to happen once, but I don't think there's a great place for it.  And it's
-    ! cheap.
-    mx_common = mx
-    mbc_common = mbc
-    x_lower_common = x_lower
-    dx_common = dx
-    meqn_common = meqn
-
-
 
         
     max_splits = 0

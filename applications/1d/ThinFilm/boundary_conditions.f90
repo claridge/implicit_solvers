@@ -7,15 +7,11 @@ subroutine apply_homogeneous_bcs(q)
     integer :: mx, mbc, meqn
     double precision :: x_lower, dx
     common /claw_config/ mx, mbc, x_lower, dx, meqn
-
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(inout) :: q
-
     double precision, dimension(4) :: zeros
 
     zeros = 0.d0
     call apply_bcs_internal(zeros, zeros, q)
-
-    !call extend_to_ghost_cells('odd', 'odd', q)
 
 end subroutine apply_homogeneous_bcs
 
@@ -29,18 +25,14 @@ subroutine apply_bcs(t, q)
     integer :: mx, mbc, meqn
     double precision :: x_lower, dx
     common /claw_config/ mx, mbc, x_lower, dx, meqn
-
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(inout) :: q
-
     double precision :: boundary_value, delta, x
     integer :: i
 
     double precision, dimension(-1:2) :: lower_values, upper_values
     double precision, external :: true_solution
     integer :: info
-
-    !call extend_to_ghost_cells('odd', 'odd', q)
 
     do i = -1, 2
         x = x_lower + (i - .5d0) * dx
@@ -52,19 +44,7 @@ subroutine apply_bcs(t, q)
         upper_values(i) = true_solution(x, t)
     end do
 
-    ! print *, ''
-    ! print *, 'Before'
-    ! print *, q(-1:2, 1)
-    ! print *, q(mx-1:mx+2, 1)
-    
     call apply_bcs_internal(lower_values, upper_values, q)
-
-    ! print *, ''
-    ! print *, 'After'
-    ! print *, q(-1:2, 1)
-    ! print *, lower_values
-    ! print *, q(mx-1:mx+2, 1)
-    ! print *, upper_values
 
 end subroutine apply_bcs
 

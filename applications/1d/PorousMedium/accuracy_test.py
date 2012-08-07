@@ -84,7 +84,7 @@ class RefinementTest(object):
 
     # Using constant mx for now.
     max_dt = max(dt_values)
-    mx_values = [min_mx * int(round(max_dt / dt)) for dt in dt_values]
+    mx_values = [int(round(min_mx * max_dt / dt)) for dt in dt_values]
     self._mx_values = array(mx_values)  
 
   def RunSimulations(self):
