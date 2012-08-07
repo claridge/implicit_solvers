@@ -7,7 +7,7 @@ subroutine qinit(maxmx, meqn, mbc, mx, x_lower, dx, q, maux, aux)
     double precision, intent(out) :: q(1-mbc:mx+mbc,meqn)
     
     integer :: i
-    double precision :: x, h_left, h_right
+    double precision :: x
     double precision, external :: true_solution
 
 

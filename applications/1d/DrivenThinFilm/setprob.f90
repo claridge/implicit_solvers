@@ -2,6 +2,10 @@ subroutine setprob
 
     implicit none
 
+    character :: implicit_integration_scheme
+    integer :: max_time_step_splits
+    common /implicit_config/ implicit_integration_scheme, max_time_step_splits
+
     integer :: newton_max_iter, newton_verbosity
     double precision :: newton_reduction_factor, newton_tolerance
     common /newton_config/ newton_max_iter, newton_reduction_factor,  &
@@ -25,6 +29,9 @@ subroutine setprob
     fname = 'setprob.data'
 
     call opendatafile(iunit, fname)
+
+    read(7, *) implicit_integration_scheme
+    read(7, *) max_time_step_splits
 
     read(7, *) newton_max_iter
     read(7, *) newton_reduction_factor
