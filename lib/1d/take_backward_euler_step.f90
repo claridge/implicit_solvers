@@ -4,6 +4,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
 ! Takes a time step with the parabolic portion of the porous medium equation.
 !-----------------------------------------------------------------------------
 
+    !$ use omp_lib
     implicit none
 
     integer :: mx, mbc, meqn
@@ -33,6 +34,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
     call apply_bcs(t, q)
 
     do ieqn = 1, meqn
+        !$omp parallel do
         do ix = 1, mx
             iterate(ix, ieqn) = q(ix, ieqn)
         end do
@@ -50,9 +52,9 @@ subroutine take_backward_euler_step(t, dt, q, success)
         norm_d_iterate = 0.d0
 
         do ieqn = 1, meqn
+            !$omp parallel do
             do ix = 1, mx
                 iterate(ix, ieqn) = iterate(ix, ieqn) + d_iterate(ix, ieqn)
-                ! norm_d_iterate = max(norm_d_iterate, abs(d_iterate(ix, ieqn)))
             end do
         end do
         norm_d_iterate = sqrt(inner_product(d_iterate, d_iterate))
@@ -68,6 +70,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
         ! If we've converged, then finish.
         if (norm_d_iterate < newton_tolerance) then
             do ieqn = 1, meqn
+                !$omp parallel do
                 do ix = 1,mx
                     q(ix, ieqn) = iterate(ix, ieqn)
                 end do
@@ -103,6 +106,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
         call apply_pde_operator(t, iterate, rhs)
 
         do ieqn = 1, meqn
+            !$omp parallel do
             do ix = 1, mx
                 rhs(ix, ieqn) = q(ix, ieqn) - iterate(ix, ieqn) + dt *  &
                     rhs(ix, ieqn)

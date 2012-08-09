@@ -7,6 +7,7 @@ subroutine take_forward_euler_step(t, dt, q)
 !   dt: Length of time step.
 !   q: PDE solution at time t.
 
+    !$ use omp_lib
     implicit none
 
     integer :: mx, mbc, meqn
@@ -23,6 +24,7 @@ subroutine take_forward_euler_step(t, dt, q)
     call apply_pde_operator(t, q, op_output)
 
     do ieqn = 1, meqn
+        !$omp parallel do
         do ix = 1, mx
             q(ix, ieqn) = q(ix, ieqn) + dt * op_output(ix, ieqn)
         end do

@@ -14,6 +14,7 @@ subroutine apply_newton_operator(t, dt, iterate, d_iterate, output)
 !   output: Result of the operation.
 !----------------------------------------------------------------
 
+    !$ use omp_lib
     implicit none
     
     integer :: mx, mbc, meqn
@@ -32,6 +33,7 @@ subroutine apply_newton_operator(t, dt, iterate, d_iterate, output)
     call apply_linearized_pde_operator(t, iterate, d_iterate, output)
     
     do ieqn = 1, meqn
+        !$omp parallel do
         do ix = 1,mx
             output(ix, ieqn) = d_iterate(ix, ieqn) - dt * output(ix, ieqn)
         end do
