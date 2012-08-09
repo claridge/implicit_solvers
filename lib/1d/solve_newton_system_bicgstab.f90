@@ -1,9 +1,21 @@
-subroutine solve_newton_system(t, dt, iterate, d_iterate)
+subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
 
-! Solve the Netwon system using BiCGStab.  d_iterate stores RHS upon entry.
-! TODO: Return success/failure.
-! TODO: Make max_iter a global parameter.
-! TODO: Add reference to Saad's book.
+! Solve the Netwon system,
+!     newton_operator(d_iterate) = newton_rhs,
+! using BiCGStab.
+!
+! The implementation is taken from Algorithm 7.7 of Y. Saad, Iterative Methods
+! for Sparse Linear Systems, 2nd Ed.
+!
+! Args:
+!   t: Time at beginning of the current step.
+!   dt: Length of the current time step.
+!   iterate: The current Newton iterate.
+!   d_iterate: iterate + d_iterate will yield the next Newton iterate.
+!     Stores newton_rhs on input.
+!   success: Returns .true. if BiCGStab converges, .false. if not.
+
+! TODO: Make max_iter a global parameter?
 
     !$ use omp_lib
     implicit none
@@ -19,6 +31,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
     double precision, intent(in) :: t, dt
     double precision, intent(in), dimension(1-mbc:mx+mbc, meqn) :: iterate
     double precision, intent(inout), dimension(1-mbc:mx+mbc, meqn) :: d_iterate
+    logical, intent(out) :: success
 
     integer :: max_iter, iter, ix, ieqn
     double precision, dimension(1-mbc:mx+mbc, meqn) :: r, r_star, p, s, Ap, As
@@ -26,7 +39,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
     double precision, external :: inner_product
     double precision :: residual_norm
 
-
+    success = .false.
     max_iter = 10 * mx
 
     do ieqn = 1, meqn
@@ -42,6 +55,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
     residual_norm = sqrt(r_dot_r_star)  ! Using r_star = r
 
     if (residual_norm <= cg_tolerance) then
+        success = .true.
         if (cg_verbosity > 0) then
             print '(A)', 'BiCGStab finished without iterating'
         end if
@@ -49,8 +63,6 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
     end if
 
     do iter = 1, max_iter
-        if (cg_verbosity > 1) print '(A,I4)', '  Iteration ', iter
-
         call apply_newton_operator(t, dt, iterate, p, Ap)
         alpha = inner_product(r, r_star) / inner_product(Ap, r_star)
 
@@ -74,6 +86,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
 
         residual_norm = sqrt(inner_product(r, r))
         if (residual_norm <= cg_tolerance) then
+            success = .true.
             if (cg_verbosity > 0) then
                 print '(A,I5,A,E16.10)', 'BiCGStab completed after ', iter,  &
                     ' iterations with norm(residual) = ', residual_norm
@@ -94,12 +107,10 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
             end do
         end do
 
-        ! TODO: Merge with logging of iteration number
-        if (cg_verbosity > 1) print '(A,E16.10)', "  residual_norm = ",  &
-            residual_norm
+        if (cg_verbosity > 1) then
+            print '(A,I4,E16.10)', 'Iteration ', iter, ': residual_norm = ',  &
+                residual_norm
+        end if
     end do
-
-    print *, 'Error: BiCGStab failed to converge'
-    stop
 
 end subroutine solve_newton_system
