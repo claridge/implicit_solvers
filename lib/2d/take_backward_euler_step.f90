@@ -13,12 +13,13 @@ subroutine take_backward_euler_step(t, dt, q, success)
     !$ use omp_lib
     implicit none
 
-    integer :: mx, mbc, meqn
-    double precision :: x_lower, dx
-    common /claw_config/ mx, mbc, x_lower, dx, meqn
+    integer :: mx, my, mbc, meqn
+    double precision :: x_lower, y_lower, dx, dy
+    common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
 
     double precision, intent(in) :: t, dt
-    double precision, dimension(1-mbc:mx+mbc, meqn), intent(inout) :: q
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn),  &
+        intent(inout) :: q
     logical, intent(out) :: success
 
     integer :: newton_max_iter, newton_verbosity
@@ -26,9 +27,10 @@ subroutine take_backward_euler_step(t, dt, q, success)
     common /newton_config/ newton_max_iter, newton_reduction_factor,  &
          newton_tolerance, newton_verbosity
 
-    double precision, dimension(1-mbc:mx+mbc, meqn) :: d_iterate, iterate
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) ::  &
+        d_iterate, iterate
     double precision :: norm_d_iterate, old_norm_d_iterate
-    integer :: iter, ix, ieqn
+    integer :: iter, ix, iy, ieqn
     double precision, external :: inner_product
     logical :: solver_success
 
@@ -40,10 +42,12 @@ subroutine take_backward_euler_step(t, dt, q, success)
 
     call apply_bcs(t, q)
 
-    do ieqn = 1, meqn
-        !$omp parallel do
-        do ix = 1, mx
-            iterate(ix, ieqn) = q(ix, ieqn)
+    do ieqn = 1, meqn        
+        !$omp parallel do private(ix)
+        do iy = 1, my
+            do ix = 1, mx
+                iterate(ix, iy, ieqn) = q(ix, iy, ieqn)
+            end do
         end do
     end do
 
@@ -60,9 +64,12 @@ subroutine take_backward_euler_step(t, dt, q, success)
         norm_d_iterate = 0.d0
 
         do ieqn = 1, meqn
-            !$omp parallel do
-            do ix = 1, mx
-                iterate(ix, ieqn) = iterate(ix, ieqn) + d_iterate(ix, ieqn)
+            !$omp parallel do private(ix)
+            do iy = 1, my
+                do ix = 1, mx
+                    iterate(ix, iy, ieqn) = iterate(ix, iy, ieqn) +  &
+                        d_iterate(ix, iy, ieqn)
+                end do
             end do
         end do
         norm_d_iterate = sqrt(inner_product(d_iterate, d_iterate))
@@ -78,9 +85,11 @@ subroutine take_backward_euler_step(t, dt, q, success)
         ! If we've converged, then finish.
         if (norm_d_iterate < newton_tolerance) then
             do ieqn = 1, meqn
-                !$omp parallel do
-                do ix = 1,mx
-                    q(ix, ieqn) = iterate(ix, ieqn)
+                !$omp parallel do private(ix)
+                do iy = 1, my
+                    do ix = 1, mx
+                        q(ix, iy, ieqn) = iterate(ix, iy, ieqn)
+                    end do
                 end do
             end do
 
@@ -114,10 +123,12 @@ subroutine take_backward_euler_step(t, dt, q, success)
         call apply_pde_operator(t, iterate, rhs)
 
         do ieqn = 1, meqn
-            !$omp parallel do
-            do ix = 1, mx
-                rhs(ix, ieqn) = q(ix, ieqn) - iterate(ix, ieqn) + dt *  &
-                    rhs(ix, ieqn)
+            !$omp parallel do private(ix)
+            do iy = 1, my
+                do ix = 1, mx
+                    rhs(ix, iy, ieqn) = q(ix, iy, ieqn) - iterate(ix, iy, ieqn)  &
+                        + dt * rhs(ix, iy, ieqn)
+                end do
             end do
         end do
     end subroutine calculate_newton_rhs

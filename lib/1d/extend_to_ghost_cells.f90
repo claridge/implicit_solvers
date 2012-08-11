@@ -1,8 +1,11 @@
-subroutine extend_to_ghost_cells (lower_extension, upper_extension, q)
+subroutine extend_to_ghost_cells(lower_extension, upper_extension, q)
 
 ! Extends the interior data of q into its ghost cells.  Possible extension types
 ! are "even", "odd", "periodic", or "none".  (Only the first letter of the
 ! argument actually matters.)
+!
+! Unlike the other library routines, this acts only on a single component of the
+! PDE solution.
 !
 ! Args:
 !   lower_extension: Extension type, as above.
@@ -19,9 +22,6 @@ subroutine extend_to_ghost_cells (lower_extension, upper_extension, q)
     character*1, intent(in) :: lower_extension, upper_extension
     double precision, intent(inout) :: q(1-mbc:mx+mbc)
 
-    integer :: ix
-    logical :: lsame
-
 
     if (lower_extension == "e") then
         q(1-mbc:0) = q(mbc:1:-1)
@@ -33,7 +33,8 @@ subroutine extend_to_ghost_cells (lower_extension, upper_extension, q)
         ! Nothing
     else
         print *, "extend_to_ghost_cells: Error: ",  &
-            "Invalid value for lower_extnsion_type."
+            "Invalid value for lower_extension_type."
+        stop
     end if
 
     if (upper_extension == "e") then
@@ -46,7 +47,8 @@ subroutine extend_to_ghost_cells (lower_extension, upper_extension, q)
         ! Nothing
     else
         print *, "extend_to_ghost_cells: Error: ",  &
-            "Invalid value for upper_extnsion_type."
+            "Invalid value for upper_extension_type."
+        stop
     end if
     
 end subroutine extend_to_ghost_cells

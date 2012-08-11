@@ -19,7 +19,7 @@ subroutine take_forward_euler_step(t, dt, q)
         intent(inout) :: q
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: op_output
-    integer :: ix, ieqn
+    integer :: ix, iy, ieqn
 
     call apply_bcs(t, q)
     call apply_pde_operator(t, q, op_output)
