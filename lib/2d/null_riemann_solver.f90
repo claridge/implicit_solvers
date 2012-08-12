@@ -61,7 +61,6 @@ subroutine rpt2(slice_direction, maxm, meqn, mwaves, mbc, mx, ql, qr, &
     double precision, intent(out) :: bmasdq(1-mbc:maxm+mbc, meqn)
     double precision, intent(out) :: bpasdq(1-mbc:maxm+mbc, meqn)
 
-    asdq = 0.d0
     bmasdq = 0.d0
     bpasdq = 0.d0
 

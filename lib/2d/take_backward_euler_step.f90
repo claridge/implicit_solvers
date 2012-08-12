@@ -116,8 +116,8 @@ subroutine take_backward_euler_step(t, dt, q, success)
 
     subroutine calculate_newton_rhs(iterate, rhs)
         implicit none
-        double precision, intent(in), dimension(1-mbc:mx+mbc, meqn) :: iterate
-        double precision, intent(out), dimension(1-mbc:mx+mbc, meqn) :: rhs
+        double precision, intent(in), dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: iterate
+        double precision, intent(out), dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: rhs
         integer :: ix
 
         call apply_pde_operator(t, iterate, rhs)

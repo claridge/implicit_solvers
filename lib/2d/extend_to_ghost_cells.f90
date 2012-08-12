@@ -103,7 +103,7 @@ subroutine extend_to_ghost_cells(x_lower_extension, x_upper_extension,  &
                 q(ix, iy) = -q(ix, iy_target)
             end do
         end do
-    else if (y_lower_extension = "p") then
+    else if (y_lower_extension == "p") then
         do iy = 1-mbc, 0
             iy_target = iy + my
             !$omp parallel do
@@ -136,7 +136,7 @@ subroutine extend_to_ghost_cells(x_lower_extension, x_upper_extension,  &
                 q(ix, iy) = -q(ix, iy_target)
             end do
         end do
-    else if (y_upper_extension = "p") then
+    else if (y_upper_extension == "p") then
         do iy = my+1, my+mbc
             iy_target = iy - my
             !$omp parallel do

@@ -3,7 +3,7 @@ subroutine src2(maxmx, maxmy, meqn, mbc, mx, my, x_lower, y_lower, dx, dy, q,  &
 
     implicit none
 
-    integer, intent(in) :: maxmx, maxmy, meqn, mbc, mx, my maux
+    integer, intent(in) :: maxmx, maxmy, meqn, mbc, mx, my, maux
     double precision, intent(in) :: x_lower, y_lower, dx, dy, t, dt
     double precision, intent(in) :: aux(1-mbc:maxmx+mbc, maux)
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn),  &
