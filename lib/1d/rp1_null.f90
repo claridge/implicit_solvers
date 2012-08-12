@@ -16,9 +16,7 @@ subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
     double precision, intent(out), dimension(1-mbc:maxmx+mbc, mwaves) :: wave_speeds
     double precision, intent(out), dimension(1-mbc:maxmx+mbc, meqn, mwaves) :: waves
     double precision, intent(out), dimension(1-mbc:maxmx+mbc, meqn) :: a_minus_dq, a_plus_dq
-    
-    integer :: i
-    
+
     waves = 0.d0
     wave_speeds = 0.d0
     a_minus_dq = 0.d0
