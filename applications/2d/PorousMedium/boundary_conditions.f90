@@ -34,7 +34,7 @@ subroutine apply_homogeneous_bcs(q)
 end subroutine apply_homogeneous_bcs
 
 
-subroutine apply_bcs(q, t)
+subroutine apply_bcs(t, q)
 
 ! Fill ghost cells with appropriate boundary values.
 !
