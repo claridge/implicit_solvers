@@ -71,8 +71,8 @@ def setrun(claw_pkg='classic'):
     # Number of space dimensions:   clawdata.ndim = ndim
     
     # Lower and upper edge of computational domain:
-    clawdata.xlower = -1.0
-    clawdata.xupper = 1.0
+    clawdata.xlower = 0
+    clawdata.xupper = 2*pi
     
     clawdata.ylower = -1.0
     clawdata.yupper = 1.0

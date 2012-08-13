@@ -108,7 +108,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
         end do
 
         if (cg_verbosity > 1) then
-            print '(A,I4,E16.10)', 'Iteration ', iter, ': residual_norm = ',  &
+            print '(A,I4,A,E16.10)', 'Iteration ', iter, ': residual_norm = ',  &
                 residual_norm
         end if
     end do
