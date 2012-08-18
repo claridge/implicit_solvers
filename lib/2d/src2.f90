@@ -17,9 +17,9 @@ subroutine src2(maxmx, maxmy, meqn, mbc, mx, my, x_lower, y_lower, dx, dy, q,  &
     integer :: max_time_step_splits
     common /implicit_config/ implicit_integration_scheme, max_time_step_splits
         
-    
-    t_new = t + dt
-    t_local = t
+    ! src2 receives the time value at the *end* of the step.
+    t_new = t
+    t_local = t_new - dt
     dt_local = dt
     n_splits = 0
     success  = .false.

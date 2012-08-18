@@ -10,7 +10,6 @@ import pylab
 import claw_solution_2d
 
 def TrueSolution(x, y, t):
-  # return exp(-t) * sin(y)
   return exp(-2*t) * sin(x) * sin(y)
 
 def BuildDefaultClawRunData():
@@ -30,19 +29,19 @@ def BuildDefaultClawRunData():
                      'to continue beyond newton_max_iter iterations')
   probdata.add_param('newton_tolerance', 1e-8, 'Newton''s method stops when '
                      'norm(delta(iterate)) is below this.')
-  probdata.add_param('newton_verbosity', 0, 'Logging level for Newton''s method')
+  probdata.add_param('newton_verbosity', 1, 'Logging level for Newton''s method')
   probdata.add_param('cg_tolerance', 1e-8, 'Conjugate gradient stops when '
                      'norm(residual) is below this.')
-  probdata.add_param('cg_verbosity', 0, 'Logging level for CG/BiCGStab')
+  probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
   probdata.add_param('num_threads', 4, 'Number of OpenMP threads.')
 
 
   clawdata = rundata.clawdata
   clawdata.ndim = 2
-  clawdata.xlower = 0
-  clawdata.xupper = 2*pi
-  clawdata.ylower = 0
-  clawdata.yupper = 2*pi
+  clawdata.xlower = .1
+  clawdata.xupper = 1.1
+  clawdata.ylower = .2
+  clawdata.yupper = 1.2
   clawdata.meqn = 1
   clawdata.maux = 1
   clawdata.mcapa = 0
@@ -131,7 +130,7 @@ if __name__ == '__main__':
   num_steps = [round(x) for x in logspace(log10(steps1), log10(steps2), 11)]
   dt_values = array([t_final / n for n in num_steps])
 
-  refinement_test = RefinementTest(t_final, dt_values, 20)
+  refinement_test = RefinementTest(t_final, dt_values, 10)
   refinement_test.RunSimulations()
 
   l2, linf = refinement_test.CalculateErrors()
