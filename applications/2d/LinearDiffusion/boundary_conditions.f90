@@ -29,7 +29,8 @@ subroutine apply_homogeneous_bcs(q)
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
 
-    call extend_to_ghost_cells('periodic', 'periodic', 'even', 'even', q(:, :, 1))
+    call extend_to_ghost_cells('periodic', 'periodic', 'periodic', 'periodic', q(:, :, 1))
+    ! call extend_to_ghost_cells('odd', 'odd', 'odd', 'odd', q(:, :, 1))
 
 end subroutine apply_homogeneous_bcs
 
@@ -53,7 +54,9 @@ subroutine apply_bcs(t, q)
     integer :: ix, iy
 
 
-    call extend_to_ghost_cells('periodic', 'periodic', 'even', 'even', q(:, :, 1))
+    call extend_to_ghost_cells('periodic', 'periodic', 'periodic', 'periodic', q(:, :, 1))
+
+    ! call extend_to_ghost_cells('odd', 'odd', 'odd', 'odd', q(:, :, 1))
 
     ! do iy = 1, my
     !     y = y_lower + (iy - .5d0) * dy

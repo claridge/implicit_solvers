@@ -12,4 +12,4 @@
 0                         =: newton_verbosity Logging level for Newtons method
 1e-08                     =: cg_tolerance Conjugate gradient stops when norm(residual) is below this.
 0                         =: cg_verbosity Logging level for CG/BiCGStab
-1                         =: num_threads  Number of OpenMP threads.
+4                         =: num_threads  Number of OpenMP threads.

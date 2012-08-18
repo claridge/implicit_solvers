@@ -10,8 +10,8 @@ import pylab
 import claw_solution_2d
 
 def TrueSolution(x, y, t):
-  return exp(-t) * sin(x)
-  
+  # return exp(-t) * sin(y)
+  return exp(-2*t) * sin(x) * sin(y)
 
 def BuildDefaultClawRunData():
   rundata = pyclaw.data.ClawRunData(pkg='Classic', ndim=2)
@@ -34,15 +34,15 @@ def BuildDefaultClawRunData():
   probdata.add_param('cg_tolerance', 1e-8, 'Conjugate gradient stops when '
                      'norm(residual) is below this.')
   probdata.add_param('cg_verbosity', 0, 'Logging level for CG/BiCGStab')
-  probdata.add_param('num_threads', 1, 'Number of OpenMP threads.')
+  probdata.add_param('num_threads', 4, 'Number of OpenMP threads.')
 
 
   clawdata = rundata.clawdata
   clawdata.ndim = 2
   clawdata.xlower = 0
   clawdata.xupper = 2*pi
-  clawdata.ylower = -1.0
-  clawdata.yupper = 1.0
+  clawdata.ylower = 0
+  clawdata.yupper = 2*pi
   clawdata.meqn = 1
   clawdata.maux = 1
   clawdata.mcapa = 0
@@ -84,7 +84,6 @@ class RefinementTest(object):
     self._t_final = t_final
     self._dt_values = dt_values
 
-    # Using constant mx for now.
     max_dt = max(dt_values)
     mx_values = [int(round(min_mx * max_dt / dt)) for dt in dt_values]
     self._mx_values = array(mx_values)  
@@ -97,6 +96,7 @@ class RefinementTest(object):
     for i in xrange(len(dt_values)):
       clawdata.dt_initial = self._dt_values[i]
       clawdata.mx = self._mx_values[i]
+      clawdata.my = self._mx_values[i]
       rundata.write()
       pyclaw.runclaw.runclaw(xclawcmd='xclaw', outdir='_output%02d' % i)
 
@@ -128,11 +128,11 @@ if __name__ == '__main__':
   t_final = 0.2
   steps1 = t_final / 1e-2
   steps2 = t_final / 1e-3
-  num_steps = [round(x) for x in logspace(log10(steps1), log10(steps2), 21)]
+  num_steps = [round(x) for x in logspace(log10(steps1), log10(steps2), 11)]
   dt_values = array([t_final / n for n in num_steps])
 
-  # refinement_test = RefinementTest(t_final, dt_values, 20)
-  # refinement_test.RunSimulations()
+  refinement_test = RefinementTest(t_final, dt_values, 20)
+  refinement_test.RunSimulations()
 
   l2, linf = refinement_test.CalculateErrors()
   pylab.loglog(dt_values, l2, 'r.', label='$L^2$ error')
