@@ -61,10 +61,8 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     do iy = 1, my
         do ix = 1, mx
             output(ix, iy, 1) =  2 * (  &
-                (q(ix+1, iy, 1) * p(ix+1, iy, 1) - 2 * q(ix, iy, 1) * p(ix, iy, 1)  &
-                    + q(ix-1, iy, 1) * p(ix-1, iy, 1)) / dx**2 +  &
-                (q(ix, iy+1, 1) * p(ix, iy+1, 1) - 2 * q(ix, iy, 1) * p(ix, iy, 1)  &
-                    + q(ix, iy-1, 1) * p(ix, iy-1, 1)) / dy**2)
+                (q(ix+1, iy, 1) * p(ix+1, iy, 1) - 2 * q(ix, iy, 1) * p(ix, iy, 1) + q(ix-1, iy, 1) * p(ix-1, iy, 1)) / dx**2 +  &
+                (q(ix, iy+1, 1) * p(ix, iy+1, 1) - 2 * q(ix, iy, 1) * p(ix, iy, 1) + q(ix, iy-1, 1) * p(ix, iy-1, 1)) / dy**2)
         end do
     end do
     
