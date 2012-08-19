@@ -36,7 +36,6 @@ subroutine apply_bcs(t, q)
 
     double precision, dimension(-1:2) :: lower_values, upper_values
     double precision, external :: true_solution
-    integer :: info
 
     do i = -1, 2
         x = x_lower + (i - .5d0) * dx

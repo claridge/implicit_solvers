@@ -40,7 +40,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     double precision :: residual_norm
 
     success = .false.
-    max_iter = 10 * mx
+    max_iter = 10 * mx * my
 
     do ieqn = 1, meqn
         !$omp parallel do private(ix)
@@ -120,5 +120,11 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
                 residual_norm
         end if
     end do
+    
+    if (cg_verbosity > 1) then
+        print '(A,I4,A,E16.10)', 'BiCGStab failed to converge after ', iter,  &
+            'iterations.  Final residual_norm: ', residual_norm, '.'
+    end if
+    
 
 end subroutine solve_newton_system

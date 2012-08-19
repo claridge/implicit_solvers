@@ -58,7 +58,13 @@ subroutine take_backward_euler_step(t, dt, q, success)
         call apply_bcs(t + dt, iterate)
         call calculate_newton_rhs(iterate, d_iterate)
         call solve_newton_system(t, dt, iterate, d_iterate, solver_success)
-        if (.not. solver_success) return
+
+        if (.not. solver_success) then
+            if (newton_verbosity > 0) then
+                print *, "Linear solver failed; Newton's method aborting."
+            end if
+            return
+        end if
 
         old_norm_d_iterate = norm_d_iterate
         norm_d_iterate = 0.d0
