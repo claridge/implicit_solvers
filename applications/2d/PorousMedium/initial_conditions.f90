@@ -13,7 +13,7 @@ subroutine qinit(maxmx, maxmy, meqn, mbc, mx, my, x_lower, y_lower, dx, dy, q)
     double precision :: x, y
     double precision, external :: true_solution
 
-    !$omp parallel do private(ix)
+    !$omp parallel do private(x, y, ix)
     do iy = 1, my
         y = y_lower + (iy-0.5d0)*dy
         do ix = 1, mx

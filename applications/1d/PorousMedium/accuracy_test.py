@@ -10,16 +10,13 @@ import pylab
 
 import claw_solution_1d
 
-def TrueSolution(x, t):
-  t0 = .3
-  tau = t + t0
-  one_third = 1./3.
-  a = (4.5)**one_third
+_MASS = 1.
+_T0 = .3
 
-  if abs(x) <= a * tau**one_third:
-    return 1. / (6 * tau) * ((a * tau**one_third)**2 - x**2)
-  else:
-    return 0.
+def TrueSolution(x, t):
+    tau = t + _T0
+    tmp = (_MASS - 1./12. * x**2 / tau**(2./3.)) / tau**(1./3.)
+    return tmp if tmp > 0. else 0.
 
 
 def BuildDefaultClawRunData():

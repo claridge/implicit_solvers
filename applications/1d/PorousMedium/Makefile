@@ -31,10 +31,9 @@ FFLAGS = -llapack -lblas -O3 -fopenmp
 IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
-  apply_linearized_pde_operator.f90 \
-  apply_pde_operator.f90 \
   bc1.f90 \
   boundary_conditions.f90 \
+	implicit_operators.f90 \
   qinit.f90 \
   setprob.f90 \
   true_solution.f90 \
