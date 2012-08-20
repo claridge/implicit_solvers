@@ -33,6 +33,11 @@ subroutine apply_pde_operator(t, q, output)
         output(ix, 1) = -(flux(ix+1) - flux(ix)) / dx
     end do
 
+!     print *, q(-1:3, 1)
+!     print *, ''
+!     print *, output(-1:3, 1)
+!     print *, ''
+!     print *, ''
 
     contains
     

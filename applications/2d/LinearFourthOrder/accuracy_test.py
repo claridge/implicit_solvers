@@ -11,7 +11,6 @@ import claw_solution_2d
 
 
 def TrueSolution(x, y, t):
-  # return exp(-t) * sin(x)
   return exp(-4*t) * sin(x) * sin(y)
 
 

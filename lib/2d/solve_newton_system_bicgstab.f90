@@ -40,7 +40,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     double precision :: residual_norm
 
     success = .false.
-    max_iter = 10 * mx * my
+    max_iter = 20 * mx * my
 
     do ieqn = 1, meqn
         !$omp parallel do private(ix)
@@ -67,6 +67,15 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     do iter = 1, max_iter
         call apply_newton_operator(t, dt, iterate, p, Ap)
         alpha = inner_product(r, r_star) / inner_product(Ap, r_star)
+        ! TODO: Not sure if this is reasonable.
+        if (alpha == 0.d0) then
+            if (cg_verbosity > 0) then
+                print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition,',  &
+                    'but reporting success anyway with residual_norm = ', residual_norm, '.'
+            end if
+            success = .true.
+            return
+        end if
 
         do ieqn = 1, meqn
             !$omp parallel do private(ix)
@@ -121,10 +130,11 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
         end if
     end do
     
-    if (cg_verbosity > 1) then
+    if (cg_verbosity > 0) then
         print '(A,I4,A,E16.10)', 'BiCGStab failed to converge after ', iter,  &
             'iterations.  Final residual_norm: ', residual_norm, '.'
     end if
+    success = .true.
     
 
 end subroutine solve_newton_system

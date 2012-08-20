@@ -22,7 +22,7 @@ CLAW_setplot_file = setplot.py      # File containing function to set plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -O3 -fopenmp
+FFLAGS = -O3 -fbounds-check -llapack -lblas
 #-fbounds-check
 
 

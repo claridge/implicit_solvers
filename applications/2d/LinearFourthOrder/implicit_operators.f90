@@ -18,10 +18,10 @@ subroutine apply_pde_operator(t, q, output)
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(in) :: q
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(out) :: output
 
-    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: tmp
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: q_laplacian
 
-    call calculate_laplacian(q(:,:,1), tmp)
-    call calculate_laplacian(tmp, output(:,:,1))
+    call calculate_laplacian(q(:,:,1), q_laplacian)    
+    call calculate_laplacian(q_laplacian, output(:,:,1))
     output = -output
     
 end subroutine apply_pde_operator
@@ -49,20 +49,19 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(in) :: q, p
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(out) :: output
     
-    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: tmp
-    
-    call calculate_laplacian(p(:,:,1), tmp)
-    call calculate_laplacian(tmp, output(:,:,1))
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: p_laplacian
+
+    call calculate_laplacian(p(:,:,1), p_laplacian)
+    call calculate_laplacian(p_laplacian, output(:,:,1))
     output = -output
-    
+
 end subroutine apply_linearized_pde_operator
 
 
 subroutine calculate_laplacian(q, q_laplacian)
 
-! Calculate Laplacian of q at cell centers.  Ghost cells
-! should be filled to enforce the desired boundary conditions
-! prior to calling this routine.
+! Calculate Laplacian of q at cell centers.  Fills ghost cells within the
+! outermost layer.
 
     !$ use omp_lib
     implicit none
