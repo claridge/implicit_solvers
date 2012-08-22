@@ -42,8 +42,8 @@ def BuildDefaultClawRunData():
 
   clawdata = rundata.clawdata
   clawdata.ndim = 1
-  clawdata.xlower = -pi
-  clawdata.xupper = pi-.1
+  clawdata.xlower = .1
+  clawdata.xupper = 1.1
   clawdata.meqn = 1
   clawdata.maux = 1
   clawdata.mcapa = 0
@@ -114,15 +114,15 @@ class RefinementTest(object):
 t_final = 0.2
 steps1 = t_final / 1e-2
 steps2 = t_final / 1e-3
-num_steps = [round(x) for x in logspace(log10(steps1), log10(steps2), 2)]
+num_steps = [round(x) for x in logspace(log10(steps1), log10(steps2), 11)]
 dt_values = array([t_final / n for n in num_steps])
 
-refinement_test = RefinementTest(t_final, dt_values, 20)
+refinement_test = RefinementTest(t_final, dt_values, 10)
 refinement_test.RunSimulations()
 
 l2, linf = refinement_test.CalculateErrors()
 pylab.loglog(dt_values, l2, 'r.', label='$L^2$ error')
 pylab.loglog(dt_values, linf, 'b.', label='$L^\infty$ error')
-pylab.loglog(dt_values, dt_values/100, 'k--', label='$\sim\Delta t$')
-pylab.loglog(dt_values, dt_values**2/80, 'k-.', label='$\sim\Delta t^2$')
+pylab.loglog(dt_values, dt_values/10, 'k--', label='$\sim\Delta t$')
+pylab.loglog(dt_values, dt_values**2 * 10, 'k-.', label='$\sim\Delta t^2$')
 legend(loc='lower right')

@@ -31,15 +31,15 @@ FFLAGS = -llapack -lblas -O3 -fopenmp
 IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
-  bc1.f90 \
   boundary_conditions.f90 \
 	implicit_operators.f90 \
-  qinit.f90 \
+  initial_conditions.f90 \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/apply_newton_operator.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/fill_1_ghost_cell.f90 \
   $(IMPLICIT_LIB)/inner_product.f90 \
   $(IMPLICIT_LIB)/rp1_null.f90 \
   $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
