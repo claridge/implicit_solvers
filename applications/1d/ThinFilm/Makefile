@@ -42,6 +42,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/apply_newton_operator.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/fill_2_ghost_cells.f90 \
   $(IMPLICIT_LIB)/inner_product.f90 \
   $(IMPLICIT_LIB)/rp1_null.f90 \
   $(IMPLICIT_LIB)/src1.f90 \

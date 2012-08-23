@@ -65,6 +65,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     do iter = 1, max_iter
         call apply_newton_operator(t, dt, iterate, p, Ap)
         alpha = inner_product(r, r_star) / inner_product(Ap, r_star)
+        ! TODO: Handle alpha=0 case.
 
         do ieqn = 1, meqn
             !$omp parallel do

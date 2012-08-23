@@ -20,7 +20,8 @@ subroutine setprob
 
     double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
         d3_stencil
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
+    double precision, dimension(4, 0:3) :: stencils
+    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil, stencils
 
     character*12 fname
     integer :: iunit
@@ -55,5 +56,10 @@ subroutine setprob
 
     ! -1, 3, -3, 1
     d3_stencil = (/ -1.d0, 3.d0, -3.d0, 1.d0 /)
+
+    stencils(:, 0) = d0_stencil
+    stencils(:, 1) = d1_stencil
+    stencils(:, 2) = d2_stencil
+    stencils(:, 3) = d3_stencil
 
 end subroutine setprob

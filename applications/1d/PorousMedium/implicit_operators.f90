@@ -46,9 +46,19 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(in) :: q, p
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(out) :: output
-    
+
+    double precision, dimension(1-mbc:mx+mbc, meqn) :: temp1, temp2
+    double precision :: epsilon = 1d-4
+
     integer :: ix
-   
+
+    ! temp1 = q + epsilon * p
+    ! call apply_pde_operator(t, temp1, output)
+    ! temp1 = q - epsilon * p
+    ! call apply_pde_operator(t, temp1, temp2)
+    ! do ix = 1, mx
+    !     output(ix, 1) = (output(ix, 1) - temp2(ix, 1)) / (2 * epsilon)
+    ! end do
 
     do ix = 1, mx
         output(ix, 1) = 2.d0 * (q(ix-1, 1) * p(ix-1, 1) - 2 * q(ix, 1) * p(ix, 1) +  &

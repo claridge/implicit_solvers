@@ -37,11 +37,11 @@ def BuildDefaultClawRunData():
   probdata.add_param('newton_reduction_factor', .5,
                      'Required reduction in residual norm for Newton''s method '
                      'to continue beyond newton_max_iter iterations')
-  probdata.add_param('newton_tolerance', 1e-12, 'Newton''s method stops when '
+  probdata.add_param('newton_tolerance', 1e-8, 'Newton''s method stops when '
                      'norm(delta(iterate)) is below this.')
-  probdata.add_param('newton_verbosity', 1, 'Logging level for Newton''s method')
+  probdata.add_param('newton_verbosity', 2, 'Logging level for Newton''s method')
 
-  probdata.add_param('cg_tolerance', 1e-12, 'Conjugate gradient stops when '
+  probdata.add_param('cg_tolerance', 1e-9, 'Conjugate gradient stops when '
                      'norm(residual) is below this.')
   probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
 
