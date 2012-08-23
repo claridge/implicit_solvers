@@ -1,13 +1,3 @@
-subroutine bc1(maxmx, meqn, mbc, mx, x_low, dx, q, maux, aux, t, dt, mthbc)
-    implicit none
-    integer, intent(in) :: maxmx, meqn, mbc, mx, mthbc(2), maux
-    double precision, intent(in) :: x_low, dx, aux, t, dt
-    double precision, intent(inout) :: q(1-mbc:mx+mbc,meqn)
-    ! No Riemann solver in use; don't do anything.
-end subroutine bc1
-
-
-
 subroutine apply_homogeneous_bcs(q)
 
 ! Apply the relevant homogeneous boundary condition operator.
