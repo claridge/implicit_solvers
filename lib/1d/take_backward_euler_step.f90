@@ -30,7 +30,6 @@ subroutine take_backward_euler_step(t, dt, q, success)
     double precision :: norm_d_iterate, old_norm_d_iterate
     integer :: iter, ix, ieqn
     double precision, external :: inner_product
-    logical :: solver_success
 
 
     success = .false.
@@ -53,8 +52,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
 
         call apply_bcs(t + dt, iterate)
         call calculate_newton_rhs(iterate, d_iterate)
-        call solve_newton_system(t, dt, iterate, d_iterate, solver_success)
-        if (.not. solver_success) return
+        call solve_newton_system(t, dt, iterate, d_iterate)
 
         old_norm_d_iterate = norm_d_iterate
         norm_d_iterate = 0.d0
