@@ -11,7 +11,7 @@ subroutine apply_homogeneous_bcs(q)
     double precision, dimension(4) :: zeros
 
     zeros = 0.d0
-    call fill_2_ghost_cells('12', zeros, '12', zeros, q(:, 1))
+    call fill_2_ghost_cells('03', zeros, '13', zeros, q(:, 1))
 
 end subroutine apply_homogeneous_bcs
 
@@ -44,18 +44,18 @@ subroutine apply_bcs(t, q)
     call get_true_solution_by_index_range(-1, 2, t, cellwise_lower_values)
     call get_true_solution_by_index_range(mx-1, mx+2, t, cellwise_upper_values)
 
-    lower_option = '12'
-    upper_option = '12'
+    lower_option = '03'
+    upper_option = '13'
 
     do i = 1, 2
         read(lower_option(i:i), '(I1)') order
-        lower_values(order) = dot_product(stencils(:, order), cellwise_lower_values) / dx**order
+        lower_values(i) = dot_product(stencils(:, order), cellwise_lower_values) / dx**order
     end do
     do i = 1, 2
         read(upper_option(i:i), '(I1)') order
-        upper_values(order) = dot_product(stencils(:, order), cellwise_upper_values) / dx**order
+        upper_values(i) = dot_product(stencils(:, order), cellwise_upper_values) / dx**order
     end do
 
-    call fill_2_ghost_cells('12', lower_values, '12', upper_values, q(:, 1))
+    call fill_2_ghost_cells(lower_option, lower_values, upper_option, upper_values, q(:, 1))
 
 end subroutine apply_bcs

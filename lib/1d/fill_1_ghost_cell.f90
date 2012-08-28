@@ -33,7 +33,8 @@ subroutine fill_1_ghost_cell(lower_option, lower_value,  &
         end if
         q(0) = q(mx)
     else if (lower_option == '0') then
-        q(0) = 2 * lower_value - q(1)
+        q(0) = 8 * lower_value / 3 - 2 *q(1) + q(2) / 3
+!         q(0) = 2*lower_value - q(1)
     else if (lower_option == '1') then
         q(0) = q(1) - lower_value * dx
     else
@@ -48,7 +49,8 @@ subroutine fill_1_ghost_cell(lower_option, lower_value,  &
         end if
         q(mx+1) = q(1)
     else if (upper_option == '0') then
-        q(mx+1) = 2 * upper_value - q(mx)
+        q(mx+1) = 8 * upper_value / 3 - 2 *q(mx) + q(mx-1) / 3
+!         q(mx+1) = 2*upper_value - q(mx-1)
     else if (upper_option == '1') then
         q(mx+1) = q(mx) + dx * upper_value
     else
