@@ -65,18 +65,15 @@ class ClawSolution:
     def frameString(self, frame_number):
         return '%04i' % frame_number
 
-
     def dataFile(self, frame_number):
         data_file_name = self.directory + '/fort.q' + self.frameString(frame_number)
         return open(data_file_name, 'r')
-        
 
     def timeFile(self, frame_number):
         time_file_name = self.directory + '/fort.t' + self.frameString(frame_number)
         return open(time_file_name, 'r')
-        
     
-    def cell_centers(self):
+    def GetCellCenters(self):
 
         x = numpy.linspace(self.x_low+self.dx/2, self.x_high-self.dx/2, self.mx)
         y = numpy.linspace(self.y_low+self.dy/2, self.y_high-self.dy/2, self.my)
@@ -85,8 +82,10 @@ class ClawSolution:
         
         return x[I[0]], y[I[1]]
 
+    def cell_centers(self):
+        return self.GetCellCenters()
 
-    def cell_vertices(self):
+    def GetCellVertices(self):
         x = numpy.linspace(self.x_low, self.x_high, self.mx+1)
         y = numpy.linspace(self.y_low, self.y_high, self.my+1)
 

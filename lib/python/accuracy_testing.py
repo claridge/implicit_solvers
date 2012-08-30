@@ -1,5 +1,4 @@
 import setrun
-import setplot
 import pyclaw.data
 import pyclaw.runclaw
 
@@ -10,6 +9,7 @@ import sys
 import getopt
 
 import claw_solution_1d
+import claw_solution_2d
 
 
 def _GetOutputDirectory(i):
@@ -33,12 +33,14 @@ class NumericalError(object):
     self.error_values.append(self._CalculateErrorValues(dx, cellwise_error))
   
   def _CalculateErrorValues(self, dx, cellwise_error):
+    dv = reduce(lambda x, y: x*y, dx) if isinstance(dx, tuple) else dx
+    
     if self.name == 'L1':
-      return sum(abs(cellwise_error)) * dx
+      return sum(abs(cellwise_error)) * dv
     elif self.name == 'L2':
-      return sqrt(sum(cellwise_error**2)) * dx
+      return sqrt(sum(cellwise_error**2)) * dv
     elif self.name == 'LInfinity':
-      return max(abs(cellwise_error))
+      return abs(cellwise_error).max()
       
   def PowerFit(self):
     """Fits error values with a curve c*dt**exponent.
@@ -81,6 +83,9 @@ class AccuracyTest(object):
     mx_values = [int(round(mx_min * max(dt_values) / dt)) for dt in dt_values]
     self._mx_values = array(mx_values)
     
+    # Not the most efficient way of getting the dimension, but it works.
+    self.ndim = build_rundata().clawdata.ndim
+    
     self.errors = None
 
   def RunSimulations(self):
@@ -91,6 +96,8 @@ class AccuracyTest(object):
     for i in xrange(len(self._dt_values)):
       clawdata.dt_initial = self._dt_values[i]
       clawdata.mx = self._mx_values[i]
+      if self.ndim == 2:
+        clawdata.my = clawdata.mx
       rundata.write()
       pyclaw.runclaw.runclaw(xclawcmd='xclaw > /dev/null',
                              outdir=_GetOutputDirectory(i))
@@ -100,13 +107,26 @@ class AccuracyTest(object):
                    'L2': NumericalError('L2'),
                    'LInfinity': NumericalError('LInfinity')}
     for i in xrange(len(self._dt_values)):
-      solution = claw_solution_1d.ClawSolution(_GetOutputDirectory(i))
+      if self.ndim == 1:
+        solution = claw_solution_1d.ClawSolution(_GetOutputDirectory(i))
+      elif self.ndim == 2:
+        solution = claw_solution_2d.ClawSolution(_GetOutputDirectory(i))
       solution.SetFrame(1)
-      true_solution = array([self._true_solution(x, self._t_final)
-                             for x in solution.GetCellCenters()])
-      cellwise_error = abs(solution.q[:,0] - true_solution)
+      
+      if self.ndim == 1:
+        true_solution = array([self._true_solution(x, self._t_final)
+                              for x in solution.GetCellCenters()])
+      elif self.ndim == 2:
+        x, y = solution.GetCellCenters()
+        true_solution = self._true_solution(x, y, self._t_final)
+
+      if self.ndim == 1:
+        cellwise_error = abs(solution.q[:,0] - true_solution)
+      elif self.ndim == 2:
+        cellwise_error = abs(solution.q[:,:,0] - true_solution)
+
       for e in self.errors.itervalues():
-        e.AddDataPoint(self._dt_values[i], solution.dx, cellwise_error)
+        e.AddDataPoint(self._dt_values[i], (solution.dx, solution.dy), cellwise_error)
 
     for e in self.errors.itervalues():
       e.PowerFit()
