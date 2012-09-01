@@ -26,7 +26,7 @@ def BuildRunData():
   clawdata.mcapa = 0
   clawdata.outstyle = 1
   clawdata.nout = 1
-  clawdata.verbosity = 1
+  clawdata.verbosity = 0
   clawdata.dt_variable = 0
   clawdata.dt_max = 1e+99
   clawdata.cfl_desired = 0.9
