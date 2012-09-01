@@ -23,8 +23,6 @@ subroutine b4step1(maxmx, mbc, mx, meqn, q, x_lower, dx, t, dt, maux, aux)
 end subroutine b4step1
 
 
-
-
 subroutine rp1(maxmx, meqn, mwaves, mbc, mx,  &
                q_left, q_right, aux_left, aux_right,  &
                waves, wave_speeds, a_minus_dq, a_plus_dq)
