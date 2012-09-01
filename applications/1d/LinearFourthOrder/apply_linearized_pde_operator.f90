@@ -15,9 +15,6 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision :: dx, x_lower
     common /claw_config/ mx, mbc, x_lower, dx, meqn
 
-    double precision :: gamma
-    common /physics_config/ gamma
-    
     double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
         d3_stencil
     common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
@@ -41,7 +38,7 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
         integer :: ix
         double precision :: q1_face, p1_face, q1_xxx, p1_xxx
         p1_xxx = dot_product(d3_stencil, p(ix-2:ix+1, 1)) / dx**3
-        fprime = gamma * p1_xxx
+        fprime = p1_xxx
     end function fprime
 
 end subroutine apply_linearized_pde_operator

@@ -99,7 +99,7 @@ class AccuracyTest(object):
       if self.ndim == 2:
         clawdata.my = clawdata.mx
       rundata.write()
-      pyclaw.runclaw.runclaw(xclawcmd='xclaw > /dev/null',
+      pyclaw.runclaw.runclaw(xclawcmd='xclaw',
                              outdir=_GetOutputDirectory(i))
 
   def CalculateErrors(self):
@@ -109,24 +109,21 @@ class AccuracyTest(object):
     for i in xrange(len(self._dt_values)):
       if self.ndim == 1:
         solution = claw_solution_1d.ClawSolution(_GetOutputDirectory(i))
-      elif self.ndim == 2:
-        solution = claw_solution_2d.ClawSolution(_GetOutputDirectory(i))
-      solution.SetFrame(1)
-      
-      if self.ndim == 1:
+        solution.SetFrame(1)
         true_solution = array([self._true_solution(x, self._t_final)
                               for x in solution.GetCellCenters()])
+        cellwise_error = abs(solution.q[:,0] - true_solution)
+        for e in self.errors.itervalues():
+          e.AddDataPoint(self._dt_values[i], solution.dx, cellwise_error)
       elif self.ndim == 2:
+        solution = claw_solution_2d.ClawSolution(_GetOutputDirectory(i))
+        solution.SetFrame(1)
         x, y = solution.GetCellCenters()
         true_solution = self._true_solution(x, y, self._t_final)
-
-      if self.ndim == 1:
-        cellwise_error = abs(solution.q[:,0] - true_solution)
-      elif self.ndim == 2:
         cellwise_error = abs(solution.q[:,:,0] - true_solution)
-
-      for e in self.errors.itervalues():
-        e.AddDataPoint(self._dt_values[i], (solution.dx, solution.dy), cellwise_error)
+        for e in self.errors.itervalues():
+          e.AddDataPoint(self._dt_values[i], (solution.dx, solution.dy), cellwise_error)
+        
 
     for e in self.errors.itervalues():
       e.PowerFit()

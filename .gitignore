@@ -1,9 +1,11 @@
 # Compiled source
 *.o
 
+# Python module
+*.pyc
+
 # Emacs backup files
 *~
 
-# Clawpack data (problem parameter) files
-claw.data
-setrun.data
+# Data files
+*.data

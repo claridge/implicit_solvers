@@ -15,9 +15,6 @@ subroutine setprob
     integer :: cg_verbosity
     common /cg_config/ cg_tolerance, cg_verbosity
 
-    double precision :: gamma
-    common /physics_config/ gamma
-
     double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
         d3_stencil
     common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
@@ -41,8 +38,6 @@ subroutine setprob
 
     read(7, *) cg_tolerance
     read(7, *) cg_verbosity
-
-    read(7, *) gamma
 
     ! -1/16, 9/16, 9/16, -1/16
     d0_stencil = (/ -0.0625d0,  0.5625d0,  0.5625d0, -0.0625d0 /)
