@@ -13,10 +13,6 @@ subroutine apply_pde_operator(t, q, output)
     integer :: mx, mbc, meqn
     double precision :: x_lower, dx
     common /claw_config/ mx, mbc, x_lower, dx, meqn
-
-    double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
-        d3_stencil
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
     
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(in), target :: q
@@ -61,10 +57,6 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     integer :: mx, mbc, meqn
     double precision :: dx, x_lower
     common /claw_config/ mx, mbc, x_lower, dx, meqn
-
-    double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
-        d3_stencil
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
 
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(in) :: q, p

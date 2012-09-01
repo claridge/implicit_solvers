@@ -26,9 +26,8 @@ subroutine apply_bcs(t, q)
     double precision :: x_lower, dx
     common /claw_config/ mx, mbc, x_lower, dx, meqn
 
-    double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
-        d3_stencil, stencils(4, 0:3)
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil, stencils
+    double precision, dimension(4, 0:3) :: stencils
+    common /stencil_config/ stencils
 
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(inout) :: q
