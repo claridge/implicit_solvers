@@ -131,10 +131,10 @@ class AccuracyTest(object):
   def CheckConvergenceOrder(self, name, target_order):    
     def _Status(passing):
       if passing:
-        return '\033[1;32mOK\033[1;m'
+        return '\033[1;32mOK\033[1;m'  # Print green
       else:
-        return '\033[1;38mFAILED\033[1;m'
-    
+        return '\033[1;31mFAILED\033[1;m'  # Print red
+
     error = self.errors[name]
     exponent = error.exponent
     passing = exponent > target_order

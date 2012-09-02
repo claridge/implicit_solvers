@@ -2,6 +2,10 @@ subroutine setprob
 
     implicit none
 
+    integer :: mx, mbc, meqn
+    double precision :: x_lower, dx
+    common /claw_config/ mx, mbc, x_lower, dx, meqn
+
     character :: implicit_integration_scheme
     integer :: max_time_step_splits
     common /implicit_config/ implicit_integration_scheme, max_time_step_splits
@@ -15,8 +19,11 @@ subroutine setprob
     integer :: cg_verbosity
     common /cg_config/ cg_tolerance, cg_verbosity
 
+    character(len=2), dimension(2, 10) :: bc_options
+    common /bc_config/ bc_options
+
     character*12 fname
-    integer :: iunit
+    integer :: iunit, i
 
 
     iunit = 7
@@ -35,4 +42,8 @@ subroutine setprob
     read(7, *) cg_tolerance
     read(7, *) cg_verbosity
     
+    do i = 1, meqn
+        read(7, *) bc_options(:, i)
+    end do
+
 end subroutine setprob

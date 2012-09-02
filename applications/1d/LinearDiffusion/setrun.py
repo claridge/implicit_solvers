@@ -8,7 +8,7 @@ that will be read in by the Fortran code.
 
 import os
 from pyclaw import data 
-
+from numpy import pi
 
 #------------------------------
 def setrun(claw_pkg='Classic'):
@@ -35,24 +35,17 @@ def setrun(claw_pkg='Classic'):
 
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
 
-    probdata.add_param('implicit_integration_scheme', 'Backward Euler')
-    probdata.add_param('max_time_step_splits', 0,
-                       'Max number of times to halve the lenght of the '
-                       'implicit time step, should Newton''s method fail to '
-                       'converge.')
+    probdata = rundata.new_UserData(name='probdata', fname='setprob.data')
+    probdata.add_param('implicit_integration_scheme', 'Crank-Nicolson')
+    probdata.add_param('max_time_step_splits', 0)
+    probdata.add_param('newton_max_iter', 10)
+    probdata.add_param('newton_reduction_factor', .5)
+    probdata.add_param('newton_tolerance', 1e-8)
+    probdata.add_param('newton_verbosity', 0)
+    probdata.add_param('cg_tolerance', 1e-8)
+    probdata.add_param('cg_verbosity', 0)
 
-    probdata.add_param('newton_max_iter', 30,
-                       'Max iterations for Newton''s method before enforcing reduction criterion')
-    probdata.add_param('newton_reduction_factor', .5,
-                       'Required reduction in residual norm for Newton''s method to continue '
-                       'beyond newton_max_iter iterations')
-    probdata.add_param('newton_tolerance', .1e-4,
-                       'Newton''s method stops when norm(delta(iterate)) is below this.')
-    probdata.add_param('newton_verbosity', 2, 'Logging level for Newton''s method')
-    
-    probdata.add_param('cg_tolerance', 1e-4,
-                       'CG or BiCGStab terminate when norm(residual) is below this.')
-    probdata.add_param('cg_verbosity', 0, 'Logging level for CG/BiCGStab')
+    probdata.add_param('bc_options', ['p', 'p'])
 
     
     #------------------------------------------------------------------
@@ -69,13 +62,12 @@ def setrun(claw_pkg='Classic'):
     clawdata.ndim = 1
     
     # Lower and upper edge of computational domain:
-    clawdata.xlower = -1.
-    clawdata.xupper = 1.
+    clawdata.xlower = -pi
+    clawdata.xupper = pi
     
 
     # Number of grid cells:
-    dx = .1
-    clawdata.mx = int(round((clawdata.xupper - clawdata.xlower) / dx))
+    clawdata.mx = 10
     
     
 
@@ -136,7 +128,7 @@ def setrun(claw_pkg='Classic'):
     # The current t, dt, and cfl will be printed every time step
     # at AMR levels <= verbosity.  Set verbosity = 0 for no printing.
     #   (E.g. verbosity == 2 means print only on levels 1 and 2.)
-    clawdata.verbosity = 1
+    clawdata.verbosity = 0
     
     
 
