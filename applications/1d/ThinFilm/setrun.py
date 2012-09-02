@@ -54,7 +54,7 @@ def setrun(claw_pkg='Classic'):
                        'norm(residual) is below this.')
     probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
 
-    probdata.add_param('gamma', 1., 'whatever')
+    probdata.add_param('bc_options_eqn1', ['03', '13'])
     
     
     #------------------------------------------------------------------

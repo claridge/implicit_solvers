@@ -47,19 +47,23 @@ def GetBoundaryCoefficients(derivative_orders,
 
 
 if __name__ == '__main__':
-  cases = [(0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
+  cases = [(0,), (1,), (0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
   input_coordinates = (.5, 1.5)
-  output_coordinates = (-.5, -1.5)
 
   print 'Lower coefficients'
   print '=================='
   first = True
   for case in cases:
+    if len(case) == 1:
+      output_coordinates = (-.5,)
+    else:
+      output_coordinates = (-1.5, -.5)
+    
     if first:
-      print 'if (orders == \'%d%d\') then' % case
+      print 'if (orders == \'%s\') then' % ''.join(str(o) for o in case)
       first = False
     else:
-      print 'else if (orders == \'%d%d\') then' % case
+      print 'else if (orders == \'%s\') then' % ''.join(str(o) for o in case)
       
     lines = GetBoundaryCoefficients(case, input_coordinates, output_coordinates)
     lines = ['    ' + line for line in lines]
@@ -70,16 +74,22 @@ if __name__ == '__main__':
   
   print 'Upper coefficients'
   print '=================='
+  cases = [(0,), (1,), (0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
   input_coordinates = (-1.5, -.5)
   output_coordinates = (.5, 1.5)
   
   first = True
   for case in cases:
+    if len(case) == 1:
+      output_coordinates = (.5,)
+    else:
+      output_coordinates = (.5, 1.5)
+
     if first:
-      print 'if (orders == \'%d%d\') then' % case
+      print 'if (orders == \'%s\') then' % ''.join(str(o) for o in case)
       first = False
     else:
-      print 'else if (orders == \'%d%d\') then' % case
+      print 'else if (orders == \'%s\') then' % ''.join(str(o) for o in case)
       
     lines = GetBoundaryCoefficients(case, input_coordinates, output_coordinates)
     lines = ['    ' + line for line in lines]

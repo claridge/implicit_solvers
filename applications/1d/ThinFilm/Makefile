@@ -38,6 +38,7 @@ CLAW_SOURCES = \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/apply_newton_operator.f90 \
+  $(IMPLICIT_LIB)/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
   $(IMPLICIT_LIB)/fill_2_ghost_cells.f90 \
