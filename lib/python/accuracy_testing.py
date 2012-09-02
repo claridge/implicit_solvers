@@ -119,7 +119,12 @@ class AccuracyTest(object):
         solution = claw_solution_2d.ClawSolution(_GetOutputDirectory(i))
         solution.SetFrame(1)
         x, y = solution.GetCellCenters()
-        true_solution = self._true_solution(x, y, self._t_final)
+        
+        true_solution = zeros((solution.mx, solution.my))
+        for ix in xrange(solution.mx):
+          for iy in xrange(solution.my):
+            true_solution[ix,iy] = self._true_solution(x[ix,iy], y[ix,iy], self._t_final)
+
         cellwise_error = abs(solution.q[:,:,0] - true_solution)
         for e in self.errors.itervalues():
           e.AddDataPoint(self._dt_values[i], (solution.dx, solution.dy), cellwise_error)
