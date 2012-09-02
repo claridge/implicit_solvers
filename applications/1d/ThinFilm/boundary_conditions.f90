@@ -20,6 +20,8 @@ subroutine set_implicit_boundary_data(t, lower_values, upper_values)
     integer :: i, order
 
 
+    if (bc_options(1, 1) == 'p') return
+
     call get_true_solution_by_index_range(-1, 2, t, cellwise_lower_values)
     call get_true_solution_by_index_range(mx-1, mx+2, t, cellwise_upper_values)
 
