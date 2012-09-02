@@ -129,12 +129,16 @@ class AccuracyTest(object):
       e.PowerFit()
 
   def CheckConvergenceOrder(self, name, target_order):    
+    def _Status(passing):
+      if passing:
+        return '\033[1;32mOK\033[1;m'
+      else:
+        return '\033[1;38mFAILED\033[1;m'
+    
     error = self.errors[name]
     exponent = error.exponent
     passing = exponent > target_order
-    return '%s error ~ dt**%f ... %s' % ( 
-        name, exponent, 'ok' if passing else 'FAILURE')
-
+    return '%s error ~ dt**%f ... %s' % (name, exponent, _Status(passing))
 
 
 def ParseFlags():
