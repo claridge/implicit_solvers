@@ -2,6 +2,10 @@ subroutine setprob
 
     !$ use omp_lib
     implicit none
+    
+    integer :: mx, my, mbc, meqn
+    double precision :: x_lower, y_lower, dx, dy
+    common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
 
     character :: implicit_integration_scheme
     integer :: max_time_step_splits
@@ -16,8 +20,11 @@ subroutine setprob
     integer :: cg_verbosity
     common /cg_config/ cg_tolerance, cg_verbosity
 
+    character(len=2), dimension(4, 10) :: bc_options
+    common /bc_config/ bc_options
+
     character*12 fname
-    integer :: iunit, num_threads
+    integer :: iunit, num_threads, i
 
 
     iunit = 7
@@ -37,7 +44,10 @@ subroutine setprob
     read(7, *) cg_verbosity
 
     read(7, *) num_threads
-
     !$ call omp_set_num_threads(num_threads)
+    
+    do i = 1, meqn
+        read(7, *) bc_options(:, i)
+    end do
     
 end subroutine setprob

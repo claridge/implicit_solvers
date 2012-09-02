@@ -17,6 +17,8 @@ def BuildRunData():
   probdata.add_param('cg_tolerance', 1e-8)
   probdata.add_param('cg_verbosity', 0)
   probdata.add_param('num_threads', 1)
+  
+  probdata.add_param('bc_options', ['0', '0', '0', '0'])
 
   clawdata = rundata.clawdata
   clawdata.ndim = 2
@@ -30,7 +32,7 @@ def BuildRunData():
   clawdata.t0 = 0.0
   clawdata.outstyle = 1
   clawdata.nout = 1
-  clawdata.verbosity = 1
+  clawdata.verbosity = 0
   clawdata.dt_variable = 0
   clawdata.dt_max = 100
   clawdata.cfl_desired = 0.9
@@ -65,9 +67,9 @@ def TrueSolution(x, y, t):
 if __name__ == '__main__':
   run_simulations, show_plots = accuracy_testing.ParseFlags()
 
-  t_final = 0.2
-  steps1 = t_final / 1e-2
-  steps2 = t_final / 1e-3
+  t_final = 0.5
+  steps1 = t_final / 1e-1
+  steps2 = t_final / 1e-2
   num_steps = [round(x) for x in logspace(log10(steps1), log10(steps2), 5)]
   dt_values = array([t_final / n for n in num_steps])
   mx_min = 10

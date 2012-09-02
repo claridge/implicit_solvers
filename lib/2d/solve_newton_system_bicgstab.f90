@@ -16,6 +16,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
 !   success: Returns .true. if BiCGStab converges, .false. if not.
 
 ! TODO: Make max_iter a global parameter?
+! TODO: Don't bother reporting success.
 
     !$ use omp_lib
     implicit none
@@ -37,10 +38,10 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: r, r_star, p, s, Ap, As
     double precision :: alpha, omega, beta, r_dot_r_star, r_dot_r_star_old
     double precision, external :: inner_product
-    double precision :: residual_norm
+    double precision :: residual_norm, denominator
 
     success = .false.
-    max_iter = 20 * mx * my
+    max_iter = 10 * mx * my
 
     do ieqn = 1, meqn
         !$omp parallel do private(ix)
@@ -66,11 +67,13 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
 
     do iter = 1, max_iter
         call apply_newton_operator(t, dt, iterate, p, Ap)
-        alpha = inner_product(r, r_star) / inner_product(Ap, r_star)
+        denominator = inner_product(Ap, r_star)
+        alpha = inner_product(r, r_star) / denominator
+        
         ! TODO: Not sure if this is reasonable.
-        if (alpha == 0.d0) then
+        if (denominator == 0.d0 .or. alpha == 0.d0) then
             if (cg_verbosity > 0) then
-                print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition,',  &
+                print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition, ',  &
                     'but reporting success anyway with residual_norm = ', residual_norm, '.'
             end if
             success = .true.
@@ -131,7 +134,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     end do
     
     if (cg_verbosity > 0) then
-        print '(A,I4,A,E16.10)', 'BiCGStab failed to converge after ', iter,  &
+        print '(A,I5,A,E16.10)', 'BiCGStab failed to converge after ', iter,  &
             'iterations.  Final residual_norm: ', residual_norm, '.'
     end if
     success = .true.
