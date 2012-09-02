@@ -7,6 +7,7 @@ from numpy import linalg
 import pylab
 import sys
 import getopt
+import subprocess
 
 import claw_solution_1d
 import claw_solution_2d
@@ -15,6 +16,9 @@ import claw_solution_2d
 def _GetOutputDirectory(i):
   return '_output%02d' % i
 
+# Print green and red, respectively
+_OK = '\033[1;32mOK\033[1;m'
+_FAILED = '\033[1;31mFAILED\033[1;m' 
 
 class NumericalError(object):
   
@@ -89,6 +93,11 @@ class AccuracyTest(object):
     self.errors = None
 
   def RunSimulations(self):
+    return_code = subprocess.call(['make', 'xclaw'])
+    if return_code:
+      print '\'make xclaw\' unsuccessful ... ' + _FAILED
+      return
+    
     rundata = self._build_rundata()
     clawdata = rundata.clawdata
     clawdata.tfinal = self._t_final
@@ -101,6 +110,7 @@ class AccuracyTest(object):
       rundata.write()
       pyclaw.runclaw.runclaw(xclawcmd='xclaw',
                              outdir=_GetOutputDirectory(i))
+    print 'Simulations executed ... ' + _OK
 
   def CalculateErrors(self):
     self.errors = {'L1': NumericalError('L1'),
@@ -136,9 +146,9 @@ class AccuracyTest(object):
   def CheckConvergenceOrder(self, name, target_order):    
     def _Status(passing):
       if passing:
-        return '\033[1;32mOK\033[1;m'  # Print green
+        return _OK
       else:
-        return '\033[1;31mFAILED\033[1;m'  # Print red
+        return _FAILED
 
     error = self.errors[name]
     exponent = error.exponent
