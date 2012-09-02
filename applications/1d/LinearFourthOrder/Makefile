@@ -32,6 +32,7 @@ IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
   boundary_conditions.f90 \
+  discrete_derivatives.f90 \
   implicit_operators.f90 \
   initial_conditions.f90 \
   setprob.f90 \

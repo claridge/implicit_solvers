@@ -2,6 +2,10 @@ subroutine setprob
 
     implicit none
 
+    integer :: mx, mbc, meqn
+    double precision :: x_lower, dx
+    common /claw_config/ mx, mbc, x_lower, dx, meqn
+
     character :: implicit_integration_scheme
     integer :: max_time_step_splits
     common /implicit_config/ implicit_integration_scheme, max_time_step_splits
@@ -15,12 +19,16 @@ subroutine setprob
     integer :: cg_verbosity
     common /cg_config/ cg_tolerance, cg_verbosity
 
-    double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
-        d3_stencil
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
+    ! The second dimension needs to be >= meqn.  It has to be specified
+    ! as a compile-time constant, though, to allow use in a common block.
+    character(len=2), dimension(2, 10) :: bc_options
+    common /bc_config/ bc_options
+
+    double precision, dimension(4, 0:3) :: stencils
+    common /stencil_config/ stencils
 
     character*12 fname
-    integer :: iunit
+    integer :: iunit, i
 
 
     iunit = 7
@@ -39,16 +47,18 @@ subroutine setprob
     read(7, *) cg_tolerance
     read(7, *) cg_verbosity
 
+    do i = 1, meqn
+        read(7, *) bc_options(:, i)
+    end do
+
+
     ! -1/16, 9/16, 9/16, -1/16
-    d0_stencil = (/ -0.0625d0,  0.5625d0,  0.5625d0, -0.0625d0 /)
-
     ! 1/24, -9/8, 9/8, -1/24
-    d1_stencil = (/ 1.d0/24, -1.125d0, 1.125d0, -1.d0/24 /)
-
     ! 1/2, -1/2, -1/2, 1/2
-    d2_stencil = (/ .5d0, -.5d0, -.5d0, .5d0 /)
-
     ! -1, 3, -3, 1
-    d3_stencil = (/ -1.d0, 3.d0, -3.d0, 1.d0 /)
+    stencils(:, 0) = (/ -0.0625d0,  0.5625d0,  0.5625d0, -0.0625d0 /)
+    stencils(:, 1) = (/ 1.d0/24, -1.125d0, 1.125d0, -1.d0/24 /)
+    stencils(:, 2) = (/ .5d0, -.5d0, -.5d0, .5d0 /)
+    stencils(:, 3) = (/ -1.d0, 3.d0, -3.d0, 1.d0 /)
 
 end subroutine setprob

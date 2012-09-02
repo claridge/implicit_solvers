@@ -13,14 +13,11 @@ subroutine apply_pde_operator(t, q, output)
     double precision :: x_lower, dx
     common /claw_config/ mx, mbc, x_lower, dx, meqn
 
-    double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
-        d3_stencil
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
-    
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(in), target :: q
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(out) :: output
 
+    double precision, external :: d3x
     integer :: ix
 
 
@@ -35,7 +32,7 @@ subroutine apply_pde_operator(t, q, output)
         implicit none
         integer :: ix
         double precision :: q1_face, q1_xxx
-        q1_xxx = dot_product(d3_stencil, q(ix-2:ix+1, 1)) / dx**3
+        q1_xxx = d3x(q(ix-2:ix+1, 1))
         flux = q1_xxx
     end function flux
 
@@ -59,14 +56,11 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision :: dx, x_lower
     common /claw_config/ mx, mbc, x_lower, dx, meqn
 
-    double precision, dimension(4) :: d0_stencil, d1_stencil, d2_stencil,  &
-        d3_stencil
-    common /stencil_config/ d0_stencil, d1_stencil, d2_stencil, d3_stencil
-
     double precision, intent(in) :: t
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(in) :: q, p
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(out) :: output
-    
+
+    double precision, external :: d3x    
     integer :: ix
 
 
@@ -81,7 +75,7 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
         implicit none
         integer :: ix
         double precision :: q1_face, p1_face, q1_xxx, p1_xxx
-        p1_xxx = dot_product(d3_stencil, p(ix-2:ix+1, 1)) / dx**3
+        p1_xxx = d3x(p(ix-2:ix+1, 1))
         fprime = p1_xxx
     end function fprime
 
