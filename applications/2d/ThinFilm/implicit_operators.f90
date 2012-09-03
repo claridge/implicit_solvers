@@ -20,31 +20,11 @@ subroutine apply_pde_operator(t, q, output)
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: q_laplacian
     integer :: ix, iy
+    double precision, external :: derivative0
 
-    q_laplacian = 0.d0
+
     call calculate_laplacian(q(:,:,1), q_laplacian)
 
-! print *, 'q(-1:3, -1:3)'
-! print *, q(-1:3, 3, 1)
-! print *, q(-1:3, 2, 1)
-! print *, q(-1:3, 1, 1)
-! print *, q(-1:3, 0, 1)
-! print *, q(-1:3, -1, 1)
-! print *, ''
-! 
-! print *, 'q_laplacian(-1:3, -1:3)'
-! print *, q_laplacian(-1:3, 3)
-! print *, q_laplacian(-1:3, 2)
-! print *, q_laplacian(-1:3, 1)
-! print *, q_laplacian(-1:3, 0)
-! print *, q_laplacian(-1:3, -1)
-! print *, ''
-
-! print *, x_flux(0, 1), x_flux(1, 1)
-! print *, y_flux(0, 1), y_flux(1, 1)
-! print *, ''
-
-    !#omp parallel do private(ix)
     do iy = 1, my
         do ix = 1, mx
             output(ix, iy, 1) = - (x_flux(ix+1, iy) - x_flux(ix, iy)) / dx  &
@@ -52,31 +32,21 @@ subroutine apply_pde_operator(t, q, output)
         end do
     end do
     
-!     print *, q(-1:3, 3, 1)
-!     print *, q(-1:3, 2, 1)
-!     print *, q(-1:3, 1, 1)
-!     print *, q(-1:3, 0, 1)
-!     print *, q(-1:3, -1, 1)
-!     print *, ''
-!     print *, output(-1:3, 1, 1)
-!     print *, ''
-!     print *, ''
     
     contains
     
     double precision function x_flux(ix, iy)
         integer :: ix, iy
         double precision :: q_face
-        q_face = (q(ix-1, iy, 1) + q(ix, iy, 1)) / 2.d0
+        q_face = derivative0(q(ix-2:ix+1, iy, 1))
         x_flux = q_face * (q_laplacian(ix, iy) - q_laplacian(ix-1, iy)) / dx
     end function x_flux
 
     double precision function y_flux(ix, iy)
         integer :: ix, iy
         double precision :: q_face
-        q_face = (q(ix, iy-1, 1) + q(ix, iy, 1)) / 2.d0
+        q_face = derivative0(q(ix, iy-2:iy+1, 1))
         y_flux = q_face * (q_laplacian(ix, iy) - q_laplacian(ix, iy-1)) / dy
-!         if (abs(y_flux) > 1d-12) print *, ix, iy, q(ix, iy-2:iy+1, 1)
     end function y_flux
     
 end subroutine apply_pde_operator
@@ -106,6 +76,7 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: q_laplacian, p_laplacian
     integer :: ix, iy
+    double precision, external :: derivative0
 
     
     call calculate_laplacian(q(:,:,1), q_laplacian)
@@ -124,8 +95,8 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision function x_flux(ix, iy)
         integer :: ix, iy
         double precision :: q_face, p_face
-        q_face = (q(ix-1, iy, 1) + q(ix, iy, 1)) / 2.d0
-        p_face = (p(ix-1, iy, 1) + p(ix, iy, 1)) / 2.d0
+        q_face = derivative0(q(ix-2:ix+1, iy, 1))
+        p_face = derivative0(p(ix-2:ix+1, iy, 1))
         x_flux = (q_laplacian(ix, iy) - q_laplacian(ix-1, iy)) / dx * p_face  &
             + q_face * (p_laplacian(ix, iy) - p_laplacian(ix-1, iy)) / dx
     end function x_flux
@@ -133,8 +104,8 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision function y_flux(ix, iy)
         integer :: ix, iy
         double precision :: q_face, p_face
-        q_face = (q(ix, iy-1, 1) + q(ix, iy, 1)) / 2.d0
-        p_face = (p(ix, iy-1, 1) + p(ix, iy, 1)) / 2.d0
+        q_face = derivative0(q(ix, iy-2:iy+1, 1))
+        p_face = derivative0(p(ix, iy-2:iy+1, 1))
         y_flux = (q_laplacian(ix, iy) - q_laplacian(ix, iy-1)) / dy * p_face  &
             + q_face * (p_laplacian(ix, iy) - p_laplacian(ix, iy-1)) / dy
     end function y_flux
