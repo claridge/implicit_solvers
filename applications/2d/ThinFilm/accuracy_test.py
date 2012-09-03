@@ -18,7 +18,7 @@ def BuildRunData():
   probdata.add_param('cg_verbosity', 0)
   probdata.add_param('num_threads', 1)
   
-  # probdata.add_param('bc_options', ['0', '0', '0', '0'])
+  probdata.add_param('bc_options', ['02', '02', '13', '13'])
 
   clawdata = rundata.clawdata
   clawdata.ndim = 2
