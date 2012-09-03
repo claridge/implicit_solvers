@@ -1,55 +1,52 @@
-subroutine apply_homogeneous_bcs(q)
-
-! Apply the relevant homogeneous boundary operator.
+subroutine set_implicit_boundary_data(t, x_lower_values, x_upper_values,  &
+                                      y_lower_values, y_upper_values)
 
     implicit none
-
+    
     integer :: mx, my, mbc, meqn
     double precision :: x_lower, y_lower, dx, dy
     common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
-
-    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
-
-    call extend_to_ghost_cells('odd', 'odd', 'odd', 'odd', q(:, :, 1))
-
-end subroutine apply_homogeneous_bcs
-
-
-subroutine apply_bcs(t, q)
-
-! Fill ghost cells with appropriate boundary values.
-!
-! Corner ghost cells are not filled appropriately.
-
-    implicit none
-
-    integer :: mx, my, mbc, meqn
-    double precision :: x_lower, y_lower, dx, dy
-    common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
-
+    
     double precision, intent(in) :: t
-    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
-    double precision :: boundary_value, x, y
-    double precision, external :: true_solution
-    integer :: ix, iy
+    double precision, dimension(2, my), intent(out) :: x_lower_values, x_upper_values
+    double precision, dimension(2, mx), intent(out) :: y_lower_values, y_upper_values
+
+    character(len=2), dimension(4, 10) :: bc_options
+    common /bc_config/ bc_options
+
+    integer :: order, ix, iy
+    double precision, external :: true_solution, gen_derivative
+    double precision, dimension(4, my) :: cell_values_my
+    double precision, dimension(mx, 4) :: cell_values_mx
+    double precision, dimension(4) :: cell_values
 
 
-    call extend_to_ghost_cells('odd', 'odd', 'odd', 'odd', q(:, :, 1))
+    if (bc_options(1, 1) /= 'p') then
+        read(bc_options(1, 1), '(I1)') order
+        do iy = 1, my
+            call get_true_solution_by_index_range(-1, 2, iy, iy, t, cell_values)
+            x_lower_values(1, iy) = gen_derivative(order, cell_values, dx)
+        end do
 
-    do iy = 1, my
-        y = y_lower + (iy - .5d0) * dy
-        boundary_value = true_solution(x_lower, y, t)
-        q(1-mbc:0, iy, 1) = q(1-mbc:0, iy, 1) + 2 * boundary_value
-        boundary_value = true_solution(x_lower + mx * dx, y, t)
-        q(mx+1:mx+mbc, iy, 1) = q(mx+1:mx+mbc, iy, 1) + 2 * boundary_value
-    end do
+        read(bc_options(2, 1), '(I1)') order
+        do iy = 1, my
+            call get_true_solution_by_index_range(mx-1, mx+2, iy, iy, t, cell_values)
+            x_upper_values(1, iy) = gen_derivative(order, cell_values, dx)
+        end do
+    end if
 
-    do ix = 1, my
-        x = x_lower + (ix - .5d0) * dx
-        boundary_value = true_solution(x, y_lower, t)
-        q(ix, 1-mbc:0, 1) = q(ix, 1-mbc:0, 1) + 2 * boundary_value
-        boundary_value = true_solution(x, y_lower + my * dy, t)
-        q(ix, my+1:my+mbc, 1) = q(ix, my+1:my+mbc, 1) + 2 * boundary_value
-    end do
+    if (bc_options(3, 1) /= 'p') then
+        read(bc_options(3, 1), '(I1)') order
+        do ix = 1, my
+            call get_true_solution_by_index_range(ix, ix, -1, 2, t, cell_values)
+            y_lower_values(1, ix) = gen_derivative(order, cell_values, dy)
+        end do
 
-end subroutine apply_bcs
+        read(bc_options(4, 1), '(I1)') order
+        do ix = 1, my
+            call get_true_solution_by_index_range(ix, ix, my-1, my+2, t, cell_values)
+            y_upper_values(1, ix) = gen_derivative(order, cell_values, dy)
+        end do
+    end if
+        
+end subroutine set_implicit_boundary_data
