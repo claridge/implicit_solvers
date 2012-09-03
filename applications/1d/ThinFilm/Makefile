@@ -32,7 +32,6 @@ IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
 	boundary_conditions.f90 \
-  discrete_derivatives.f90 \
 	implicit_operators.f90 \
 	initial_conditions.f90 \
   setprob.f90 \
@@ -44,6 +43,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
   $(IMPLICIT_LIB)/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/inner_product.f90 \
+  $(IMPLICIT_LIB)/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/null_riemann_solver.f90 \
   $(IMPLICIT_LIB)/src1.f90 \
   $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
