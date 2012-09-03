@@ -39,6 +39,7 @@ CLAW_SOURCES = \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
+  $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/2d/apply_newton_operator.f90 \
   $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
