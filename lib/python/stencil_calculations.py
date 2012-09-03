@@ -36,17 +36,17 @@ def GetBoundaryCoefficients(derivative_orders,
       coefficient = coefficients[orders_to_row_indices[o]]
       coeff_string = ('%.15e' % coefficient).replace('e', 'd')
       lines.append('boundary_coefficients(%d, %d) = %s%s' % 
-                   (i+1, i_output+1, coeff_string, _DxSuffix(o)))
+                   (i_output+1, i+1, coeff_string, _DxSuffix(o)))
 
     for i, c in enumerate(input_coordinates):
       coefficient = coefficients[coordinates_to_row_indices[c]]
       coeff_string = ('%.15e' % coefficient).replace('e', 'd')
-      lines.append('cell_coefficients(%d, %d) = %s' % (i+1, i_output+1, coeff_string)) 
+      lines.append('cell_coefficients(%d, %d) = %s' % (i_output+1, i+1, coeff_string)) 
 
   return lines
 
 
-if __name__ == '__main__':
+def GetBcCoefficients():
   cases = [(0,), (1,), (0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
   input_coordinates = (.5, 1.5)
 
@@ -95,4 +95,20 @@ if __name__ == '__main__':
     lines = ['    ' + line for line in lines]
     print '\n'.join(lines)
   print 'end if'
+
+
+def GetCubicExtrapolant():
+  input_coordinates = (.5, 1.5, 2.5, 3.5)
+  output_coordinates = (-1.5, -.5)
+  lines = GetBoundaryCoefficients([], input_coordinates, output_coordinates)
+  print '\n'.join(lines)
+
+
+def GetQuarticExtrapolant():
+  input_coordinates = (.5, 1.5, 2.5, 3.5, 4.5)
+  output_coordinates = (-.5,)
+  lines = GetBoundaryCoefficients([], input_coordinates, output_coordinates)
+  print '\n'.join(lines)
   
+if __name__ == '__main__':
+  GetQuarticExtrapolant()

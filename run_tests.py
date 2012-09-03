@@ -23,7 +23,6 @@ for test_file in TEST_FILES:
     print 'Make failed'
   else:
     subprocess.call(['python', file_name])
-  raw_input('Press ENTER to continue')
   
 
 for test_file in TEST_FILES:

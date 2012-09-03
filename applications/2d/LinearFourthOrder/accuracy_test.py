@@ -15,17 +15,18 @@ def BuildRunData():
   probdata.add_param('newton_tolerance', 1e-8)
   probdata.add_param('newton_verbosity', 0)
   probdata.add_param('cg_tolerance', 1e-8)
-  probdata.add_param('cg_verbosity', 0)
+  probdata.add_param('cg_verbosity', 1)
   probdata.add_param('num_threads', 1)
   
   # probdata.add_param('bc_options', ['0', '0', '0', '0'])
+  probdata.add_param('bc_options', ['13', '13', '03', '03'])
 
   clawdata = rundata.clawdata
   clawdata.ndim = 2
   clawdata.xlower = .1
   clawdata.xupper = 1.1
-  clawdata.ylower = .2
-  clawdata.yupper = 1.2
+  clawdata.ylower = .1
+  clawdata.yupper = 1.1
   clawdata.meqn = 1
   clawdata.maux = 1
   clawdata.mcapa = 0
