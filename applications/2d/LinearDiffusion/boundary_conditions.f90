@@ -49,23 +49,3 @@ subroutine set_implicit_boundary_data(t, x_lower_values, x_upper_values,  &
     end do
         
 end subroutine set_implicit_boundary_data
-
-
-
-subroutine bc2(maxmx, maxmy, meqn, mbc, mx, my, x_low, y_low, dx, dy,  &
-               q, maux, aux, t, dt, mthbc)
-
-! Applies boundary conditions before each call to rpn2.
-!
-! This version doesn't do anything.
-
-    implicit none
-
-    integer, intent(in) :: maxmx, maxmy, meqn, mbc, mx, my, maux
-    double precision, intent(in) :: x_low, y_low, dx, dy, t, dt
-    double precision :: aux(1-mbc:maxmx+mbc, 1-mbc:maxmy+mbc, *)
-    integer, dimension(4), intent(in) :: mthbc(4)
-    double precision, dimension(1-mbc:maxmx+mbc, 1-mbc:maxmy+mbc, meqn),  &
-        intent(inout) :: q
-
-end subroutine bc2
