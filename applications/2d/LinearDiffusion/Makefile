@@ -46,6 +46,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
   $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \
+  $(IMPLICIT_LIB)/2d/setprob_implicit.f90 \
   $(IMPLICIT_LIB)/2d/solve_newton_system_bicgstab.f90 \
   $(IMPLICIT_LIB)/2d/src2.f90 \
   $(IMPLICIT_LIB)/2d/take_backward_euler_step.f90 \

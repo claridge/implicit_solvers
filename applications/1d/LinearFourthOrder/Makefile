@@ -21,7 +21,7 @@ CLAW_PLOTDIR = _plots               # Directory for plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -llapack -lblas -O3
+FFLAGS = -O3
 
 
 # ---------------------------------
@@ -31,9 +31,9 @@ FFLAGS = -llapack -lblas -O3
 IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
-  boundary_conditions.f90 \
-  implicit_operators.f90 \
-  initial_conditions.f90 \
+	boundary_conditions.f90 \
+	implicit_operators.f90 \
+	initial_conditions.f90 \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/apply_newton_operator.f90 \
@@ -45,6 +45,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/inner_product.f90 \
   $(IMPLICIT_LIB)/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/null_riemann_solver.f90 \
+  $(IMPLICIT_LIB)/setprob_implicit.f90 \
   $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
   $(IMPLICIT_LIB)/src1.f90 \
   $(IMPLICIT_LIB)/take_backward_euler_step.f90 \

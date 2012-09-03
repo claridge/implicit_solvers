@@ -45,8 +45,9 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/inner_product.f90 \
   $(IMPLICIT_LIB)/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/null_riemann_solver.f90 \
-  $(IMPLICIT_LIB)/src1.f90 \
+  $(IMPLICIT_LIB)/setprob_implicit.f90 \
   $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
+  $(IMPLICIT_LIB)/src1.f90 \
   $(IMPLICIT_LIB)/take_backward_euler_step.f90 \
   $(IMPLICIT_LIB)/take_crank_nicolson_step.f90 \
   $(IMPLICIT_LIB)/take_forward_euler_step.f90
