@@ -43,7 +43,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/apply_newton_operator.f90 \
   $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
-  $(IMPLICIT_LIB)/2d/extend_to_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/2d/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/2d/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
   $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \
