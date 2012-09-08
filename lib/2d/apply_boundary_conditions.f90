@@ -12,21 +12,11 @@ subroutine apply_homogeneous_bcs(q)
     common /bc_config/ bc_options
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
-    ! Dimensions are correct; there are my horizontal strips and mx vertical strips.
-!     double precision, dimension(2, my) :: x_zeros
-!     double precision, dimension(2, mx) :: y_zeros
     integer :: i
 
     do i = 1, meqn
         call fill_ghost_cells_homogeneous(bc_options(:, i), q(:,:,i))
     end do
-
-!     x_zeros = 0.d0
-!     y_zeros = 0.d0
-!     do i = 1, meqn
-!         call fill_ghost_cells(bc_options(:, i), x_zeros, x_zeros,  &
-!                               y_zeros, y_zeros, q(:, :, i))
-!     end do
 
 end subroutine apply_homogeneous_bcs
 
@@ -50,9 +40,9 @@ subroutine apply_bcs(t, q)
     double precision, dimension(2, my, meqn) :: x_lower_values, x_upper_values
     double precision, dimension(2, mx, meqn) :: y_lower_values, y_upper_values
     integer :: i
-    
 
-    call set_implicit_boundary_data(t, x_lower_values, x_upper_values, y_lower_values, y_upper_values)
+    call set_implicit_boundary_data(t, x_lower_values, x_upper_values,  &
+                                    y_lower_values, y_upper_values)
 
     do i = 1, meqn
         call fill_ghost_cells(bc_options(:, i), x_lower_values, x_upper_values,  &

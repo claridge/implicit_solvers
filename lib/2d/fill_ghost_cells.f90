@@ -1,6 +1,6 @@
 subroutine fill_ghost_cells_homogeneous(bc_options, q)
 
-! Apply the relevant homogeneous boundary condition operator.
+! Fill ghost cells with homogeneous boundary conditions.
 
     implicit none
 
@@ -58,12 +58,7 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
     double precision, intent(inout) :: q(1-mbc:mx+mbc, 1-mbc:my+mbc)
 
     ! TODO: Clean up unused variables
-    double precision, dimension(2, 2) :: boundary_coeffs, cell_coeffs
-    double precision, dimension(2, 2) :: corner
-    integer :: num_cells, ix, iy, i
     double precision, dimension(2, mbc) :: zeros
-    double precision, dimension(2, 1) :: extrap_boundary_values
-    double precision :: temp_corner
 
 
     zeros = 0.d0
@@ -121,8 +116,10 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         implicit none
         character(len=2), intent(in) :: options
         integer, intent(in) :: iy_low, iy_high
-        double precision, dimension(2, iy_high-iy_low+1), intent(in) :: boundary_values
-        double precision, dimension(2, 2) :: boundary_coeffs, cell_ceffs
+        double precision, dimension(2, iy_low:iy_high), intent(in) :: boundary_values
+        double precision, dimension(2, 2) :: boundary_coeffs
+        double precision, dimension(3, 2) :: cell_coeffs
+        integer :: iy
 
         if (options == 'p') then
             do iy = iy_low, iy_high
@@ -130,14 +127,15 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
             end do
         else
             call get_lower_bc_coefficients(options, dx, boundary_coeffs, cell_coeffs)
-            num_cells = len_trim(options)
-            if (num_cells == 1) then
+            if (len_trim(options) == 1) then
                 do iy = iy_low, iy_high
-                    q(0, iy) = boundary_coeffs(1, 1) * boundary_values(1, iy) + dot_product(q(1:2, iy), cell_coeffs(1:2, 1))
+                    q(-1:0, iy) = boundary_values(1, iy) * boundary_coeffs(1, :)  &
+                        + matmul(q(1:3, iy), cell_coeffs)
                 end do
-            else if (num_cells == 2) then
+            else
                 do iy = iy_low, iy_high
-                    q(-1:0, iy) = matmul(boundary_values(:, iy), boundary_coeffs) + matmul(q(1:2, iy), cell_coeffs)
+                    q(-1:0, iy) = matmul(boundary_values(:, iy), boundary_coeffs)  &
+                        + matmul(q(1:3, iy), cell_coeffs)
                 end do
             end if
         end if
@@ -148,8 +146,10 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         implicit none
         character(len=2), intent(in) :: options
         integer, intent(in) :: iy_low, iy_high
-        double precision, dimension(2, iy_high-iy_low+1), intent(in) :: boundary_values
-        double precision, dimension(2, 2) :: boundary_coeffs, cell_ceffs
+        double precision, dimension(2, iy_low:iy_high), intent(in) :: boundary_values
+        double precision, dimension(2, 2) :: boundary_coeffs
+        double precision, dimension(3, 2) :: cell_coeffs
+        integer :: iy
 
         if (options == 'p') then
             do iy = iy_low, iy_high
@@ -157,16 +157,15 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
             end do
         else
             call get_upper_bc_coefficients(options, dx, boundary_coeffs, cell_coeffs)
-            num_cells = len_trim(options)
-            if (num_cells == 1) then
+            if (len_trim(options) == 1) then
                 do iy = iy_low, iy_high
-                    q(mx+1, iy) = boundary_coeffs(1, 1) * boundary_values(1, iy)  &
-                        + dot_product(q(mx-1:mx, iy), cell_coeffs(:, 1))
+                    q(mx+1:mx+2, iy) = boundary_values(1, iy) * boundary_coeffs(1, :)  &
+                        + matmul(q(mx-2:mx, iy), cell_coeffs)
                 end do
-            else if (num_cells == 2) then
+            else
                 do iy = iy_low, iy_high
                     q(mx+1:mx+2, iy) = matmul(boundary_values(:, iy), boundary_coeffs)  &
-                        + matmul(q(mx-1:mx, iy), cell_coeffs)
+                        + matmul(q(mx-2:mx, iy), cell_coeffs)
                 end do
             end if
         end if
@@ -177,8 +176,10 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         implicit none
         character(len=2), intent(in) :: options
         integer, intent(in) :: ix_low, ix_high
-        double precision, dimension(2, ix_high-ix_low+1), intent(in) :: boundary_values
-        double precision, dimension(2, 2) :: boundary_coeffs, cell_ceffs
+        double precision, dimension(2, ix_low:ix_high), intent(in) :: boundary_values
+        double precision, dimension(2, 2) :: boundary_coeffs
+        double precision, dimension(3, 2) :: cell_coeffs
+        integer :: ix
 
         if (options == 'p') then
             do ix = ix_low, ix_high
@@ -186,15 +187,15 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
             end do
         else
             call get_lower_bc_coefficients(bc_options(3), dy, boundary_coeffs, cell_coeffs)
-            num_cells = len_trim(bc_options(3))
-            if (num_cells == 1) then
+            if (len_trim(options) == 1) then
                 do ix = ix_low, ix_high
-                    q(ix, 0) = boundary_coeffs(1, 1) * boundary_values(1, ix)  &
-                        + dot_product(q(ix, 1:2), cell_coeffs(:, 1))
+                    q(ix, -1:0) = boundary_values(1, ix) * boundary_coeffs(1, :)  &
+                        + matmul(q(ix, 1:3), cell_coeffs)
                 end do
-            else if (num_cells == 2) then
+            else
                 do ix = ix_low, ix_high
-                    q(ix, -1:0) = matmul(boundary_values(:, ix), boundary_coeffs) + matmul(q(ix, 1:2), cell_coeffs)
+                    q(ix, -1:0) = matmul(boundary_values(:, ix), boundary_coeffs)  &
+                        + matmul(q(ix, 1:3), cell_coeffs)
                 end do
             end if
         end if
@@ -205,8 +206,10 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         implicit none
         character(len=2), intent(in) :: options
         integer, intent(in) :: ix_low, ix_high
-        double precision, dimension(2, ix_high-ix_low+1), intent(in) :: boundary_values
-        double precision, dimension(2, 2) :: boundary_coeffs, cell_ceffs
+        double precision, dimension(2, ix_low:ix_high), intent(in) :: boundary_values
+        double precision, dimension(2, 2) :: boundary_coeffs
+        double precision, dimension(3, 2) :: cell_coeffs
+        integer :: ix
 
         if (options == 'p') then
             do ix = ix_low, ix_high
@@ -214,15 +217,15 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
             end do
         else
             call get_upper_bc_coefficients(bc_options(4), dy, boundary_coeffs, cell_coeffs)
-            num_cells = len_trim(bc_options(4))
-            if (num_cells == 1) then
-                do ix = 1, mx
-                    q(ix, my+1) = boundary_coeffs(1, 1) * boundary_values(1, ix)  &
-                        + dot_product(q(ix, my-1:my), cell_coeffs(:, 1))
+            if (len_trim(options) == 1) then
+                do ix = ix_low, ix_high
+                    q(ix, my+1:my+2) = boundary_values(1, ix) * boundary_coeffs(1, :)  &
+                        + matmul(q(ix, my-2:my), cell_coeffs)
                 end do
-            else if (num_cells == 2) then
+            else
                 do ix = 1, mx
-                    q(ix, my+1:my+2) = matmul(boundary_values(:, ix), boundary_coeffs) + matmul(q(ix, my-1:my), cell_coeffs)
+                    q(ix, my+1:my+2) = matmul(boundary_values(:, ix), boundary_coeffs)  &
+                        + matmul(q(ix, my-2:my), cell_coeffs)
                 end do
             end if
         end if

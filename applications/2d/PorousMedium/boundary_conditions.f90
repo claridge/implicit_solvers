@@ -21,6 +21,11 @@ subroutine set_implicit_boundary_data(t, x_lower_values, x_upper_values,  &
     double precision, dimension(4) :: cell_values
 
 
+    x_lower_values = 0.d0
+    x_upper_values = 0.d0
+    y_lower_values = 0.d0
+    y_upper_values = 0.d0
+
     if (bc_options(1, 1) /= 'p') then
         read(bc_options(1, 1), '(I1)') order
         do iy = 1, my

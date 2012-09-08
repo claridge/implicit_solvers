@@ -15,7 +15,7 @@ def BuildRunData():
   probdata.add_param('newton_tolerance', 1e-8)
   probdata.add_param('newton_verbosity', 0)
   probdata.add_param('cg_tolerance', 1e-8)
-  probdata.add_param('cg_verbosity', 1)
+  probdata.add_param('cg_verbosity', 0)
   probdata.add_param('num_threads', 1)
   
   # probdata.add_param('bc_options', ['0', '0', '0', '0'])
@@ -33,7 +33,7 @@ def BuildRunData():
   clawdata.t0 = 0.0
   clawdata.outstyle = 1
   clawdata.nout = 1
-  clawdata.verbosity = 0
+  clawdata.verbosity = 1
   clawdata.dt_variable = 0
   clawdata.dt_max = 100
   clawdata.cfl_desired = 0.9

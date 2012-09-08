@@ -41,6 +41,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/inner_product.f90 \
   $(IMPLICIT_LIB)/interface_derivatives.f90 \

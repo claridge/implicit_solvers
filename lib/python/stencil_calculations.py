@@ -36,28 +36,29 @@ def GetBoundaryCoefficients(derivative_orders,
       coefficient = coefficients[orders_to_row_indices[o]]
       coeff_string = ('%.15e' % coefficient).replace('e', 'd')
       lines.append('boundary_coefficients(%d, %d) = %s%s' % 
-                   (i_output+1, i+1, coeff_string, _DxSuffix(o)))
+                   (i+1, i_output+1, coeff_string, _DxSuffix(o)))
 
     for i, c in enumerate(input_coordinates):
       coefficient = coefficients[coordinates_to_row_indices[c]]
       coeff_string = ('%.15e' % coefficient).replace('e', 'd')
-      lines.append('cell_coefficients(%d, %d) = %s' % (i_output+1, i+1, coeff_string)) 
+      lines.append('cell_coefficients(%d, %d) = %s' % (i+1, i_output+1, coeff_string)) 
 
   return lines
 
 
 def GetBcCoefficients():
   cases = [(0,), (1,), (0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
-  input_coordinates = (.5, 1.5)
+  input_coordinates = (.5, 1.5, 2.5)
+  output_coordinates = (-1.5, -.5)
 
   print 'Lower coefficients'
   print '=================='
   first = True
   for case in cases:
-    if len(case) == 1:
-      output_coordinates = (-.5,)
-    else:
-      output_coordinates = (-1.5, -.5)
+    # if len(case) == 1:
+    #   output_coordinates = (-1.5, -.5)
+    # else:
+    #   output_coordinates = (-1.5, -.5)
     
     if first:
       print 'if (orders == \'%s\') then' % ''.join(str(o) for o in case)
@@ -75,15 +76,15 @@ def GetBcCoefficients():
   print 'Upper coefficients'
   print '=================='
   cases = [(0,), (1,), (0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
-  input_coordinates = (-1.5, -.5)
+  input_coordinates = (-2.5, -1.5, -.5)
   output_coordinates = (.5, 1.5)
   
   first = True
   for case in cases:
-    if len(case) == 1:
-      output_coordinates = (.5,)
-    else:
-      output_coordinates = (.5, 1.5)
+    # if len(case) == 1:
+    #   output_coordinates = (.5,)
+    # else:
+    #   output_coordinates = (.5, 1.5)
 
     if first:
       print 'if (orders == \'%s\') then' % ''.join(str(o) for o in case)
@@ -111,4 +112,4 @@ def GetQuarticExtrapolant():
   print '\n'.join(lines)
   
 if __name__ == '__main__':
-  GetQuarticExtrapolant()
+  GetBcCoefficients()
