@@ -110,6 +110,18 @@ def GetQuarticExtrapolant():
   output_coordinates = (-.5,)
   lines = GetBoundaryCoefficients([], input_coordinates, output_coordinates)
   print '\n'.join(lines)
-  
+
+
+def GetQuinticExtrapolant():
+  input_coordinates = (.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+  output_coordinates = (-1.5, -.5,)
+  lines = GetBoundaryCoefficients([], input_coordinates, output_coordinates)
+  print '\n'.join(lines)
+  print ''
+  input_coordinates = (-5.5, -4.5, -3.5, -2.5, -1.5, -.5)
+  output_coordinates = (.5, 1.5,)
+  lines = GetBoundaryCoefficients([], input_coordinates, output_coordinates)
+  print '\n'.join(lines)
+
 if __name__ == '__main__':
-  GetBcCoefficients()
+  GetQuinticExtrapolant()

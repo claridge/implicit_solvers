@@ -96,5 +96,6 @@ if __name__ == '__main__':
     test.errors['LInfinity'].PlotDtFit('b:')
     
     pylab.legend(loc='lower right')
+    pylab.show()
 
   raw_input('Press ENTER to finish')

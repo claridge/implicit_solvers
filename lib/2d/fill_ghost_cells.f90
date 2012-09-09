@@ -57,8 +57,9 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
     double precision, intent(in), dimension(2, mx) :: y_lower_values, y_upper_values
     double precision, intent(inout) :: q(1-mbc:mx+mbc, 1-mbc:my+mbc)
 
-    ! TODO: Clean up unused variables
     double precision, dimension(2, mbc) :: zeros
+    double precision, dimension(2, 1) :: extrap_boundary_values
+    double precision, dimension(2, 2) :: temp_corner
 
 
     zeros = 0.d0
@@ -81,36 +82,42 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         call set_y_upper_ghost_cells(bc_options(4), zeros, 1-mbc, 0)
         call set_y_upper_ghost_cells(bc_options(4), zeros, mx+1, mx+mbc)
     else
-        q(0, 0) = (quartic_extrap(q(1:5, 0)) + quartic_extrap(q(0, 1:5))) / 2.d0
-        q(mx+1, 0) = (quartic_extrap(q(mx:mx-4:-1, 0)) + quartic_extrap(q(mx+1, 1:5))) / 2.d0
-        q(0, my+1) = (quartic_extrap(q(1:5, my+1)) + quartic_extrap(q(0, my:my-4:-1))) / 2.d0
-        q(mx+1, my+1) = (quartic_extrap(q(mx:mx-4:-1, my+1)) + quartic_extrap(q(mx+1, my:my-4:-1))) / 2.d0        
-    ! TODO: Clear this out when I'm sure I don't want it.
-    !         do i = 1, 2
-    !             extrap_boundary_values(i, 1) = cubic_extrap(x_lower_values(i, 1:4))
-    !         end do
-    !         call set_x_lower_ghost_cells(bc_options(1), extrap_boundary_values, 0, 0)
-    !         do i = 1, 2
-    !             extrap_boundary_values(i, 1) = cubic_extrap(y_lower_values(i, 1:4))
-    !         end do
-    !         call set_y_lower_ghost_cells(bc_options(3), extrap_boundary_values, 0, 0)
-    !         q(0, 0) = (q(0, 0) + temp_corner) / 2.d0
+        ! x lower, y lower
+        call quintic_extrap(q(1:6, -1), q(-1:0, -1))
+        call quintic_extrap(q(1:6, 0), q(-1:0, 0))
+        temp_corner = q(-1:0, -1:0)
+        call quintic_extrap(q(-1, 1:6), q(-1, -1:0))
+        call quintic_extrap(q(0, 1:6), q(0, -1:0))
+        q(-1:0, -1:0) = (q(-1:0, -1:0) + temp_corner) / 2.d0
+
+        ! x upper, y lower
+        call quintic_extrap(q(mx:mx-5:-1, -1), q(mx+2:mx+1:-1, -1))
+        call quintic_extrap(q(mx:mx-5:-1, 0), q(mx+2:mx+1:-1, 0))
+        temp_corner = q(mx+1:mx+2, -1:0)
+        call quintic_extrap(q(mx+1, 1:6), q(mx+1, -1:0))
+        call quintic_extrap(q(mx+2, 1:6), q(mx+2, -1:0))
+        q(mx+1:mx+2, -1:0) = (q(mx+1:mx+2, -1:0) + temp_corner) / 2.d0
+
+        ! x lower, y upper
+        call quintic_extrap(q(1:6, my+1), q(-1:0, my+1))
+        call quintic_extrap(q(1:6, my+2), q(-1:0, my+2))
+        temp_corner = q(-1:0, my+1:my+2)
+        call quintic_extrap(q(-1, my:my-5:-1), q(-1, my+2:my+1:-1))
+        call quintic_extrap(q(0, my:my-5:-1), q(0, my+2:my+1:-1))
+        q(-1:0, my+1:my+2) = (q(-1:0, my+1:my+2) + temp_corner) / 2.d0
+
+        ! x upper, y upper
+        call quintic_extrap(q(mx:mx-5:-1, my+1), q(mx+2:mx+1:-1, my+1))
+        call quintic_extrap(q(mx:mx-5:-1, my+2), q(mx+2:mx+1:-1, my+2))
+        temp_corner = q(mx+1:mx+2, my+1:my+2)
+        call quintic_extrap(q(mx+1, my:my-5:-1), q(mx+1, my+2:my+1))
+        call quintic_extrap(q(mx+2, my:my-5:-1), q(mx+2, my+2:my+1))
+        q(mx+1:mx+2, my+1:my+2) = (q(mx+1:mx+2, my+1:my+2) + temp_corner) / 2.d0
     end if
 
 
     contains
 
-
-    double precision function cubic_extrap(u)
-        double precision, dimension(4) :: u
-        cubic_extrap = 4.d0 * u(1) - 6.d0 * u(2) + 4.d0 * u(3) - u(4)
-    end function cubic_extrap
-
-    double precision function quartic_extrap(u)
-        double precision, dimension(5) :: u
-        quartic_extrap = 5.d0 * u(1) - 10.d0 * u(2) + 10.d0 * u(3) - 5.d0 * u(4) + u(5)
-    end function quartic_extrap    
-    
 
     subroutine set_x_lower_ghost_cells(options, boundary_values, iy_low, iy_high)
         implicit none
@@ -232,3 +239,13 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
     end subroutine set_y_upper_ghost_cells
 
 end subroutine fill_ghost_cells
+
+
+subroutine quintic_extrap(source, dest)
+    double precision, dimension(6), intent(in) :: source
+    double precision, dimension(2), intent(out) :: dest
+    dest(1) = 21.d0 * source(1) - 70.d0 * source(2) + 105.d0 * source(3)  &
+        - 84.d0 * source(4) + 35.d0 * source(5) - 6.d0 * source(6)
+    dest(2) = 6.d0 * source(1) - 15.d0 * source(2) + 20.d0 * source(3)  &
+        - 15.d0 * source(4) + 6.d0 * source(5) - source(6)
+end subroutine quintic_extrap
