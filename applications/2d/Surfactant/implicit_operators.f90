@@ -26,6 +26,7 @@ subroutine apply_pde_operator(t, q, output)
     double precision, external :: derivative0, derivative1
     double precision, dimension(2) :: lower_flux, upper_flux
 
+
     call calculate_laplacian(q(:,:,1), h_laplacian)
     call compute_surface_tension(mx+2*mbc, my+2*mbc, q(:, :, 2), surface_tension)
 
@@ -40,7 +41,6 @@ subroutine apply_pde_operator(t, q, output)
             output(ix, iy, :) = output(ix, iy, :) - (upper_flux - lower_flux) / dy
         end do
     end do
-        
     
     contains
 
@@ -175,8 +175,9 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
         double precision :: g_face, g_y, pg_face, pg_y, surface_tension_y
         
         h_face = derivative0(q(ix, iy-2:iy+1, 1))
-        h_y = derivative1(q(ix, iy-2:iy+1, 1))
+        h_y = derivative1(q(ix, iy-2:iy+1, 1), dy)
         h_laplacian_y = (h_laplacian(ix, iy) - h_laplacian(ix-1, iy))
+        ph_y = derivative1(p(ix, iy-2:iy+1, 1), dy)
         ph_face = derivative0(p(ix, iy-2:ix+1, 1))
         ph_laplacian_y = (ph_laplacian(ix, iy) - ph_laplacian(ix, iy-1)) / dy
         flux(1) = h_face**3 / 3.d0 * (-beta * ph_y + kappa * ph_laplacian_y)  &
@@ -185,10 +186,11 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
         g_face = (q(ix, iy, 2) + q(ix, iy-1, 2)) / 2.d0
         g_y = (q(ix, iy, 2) - q(ix, iy-1, 2)) / dy
         pg_face = (p(ix, iy, 2) + p(ix, iy-1, 2)) / 2.d0
+        pg_y = (p(ix, iy, 2) - p(ix, iy-1, 2)) / dy
         surface_tension_y = (surface_tension(ix, iy) - surface_tension(ix, iy-1)) / dy
-        flux(2) = (ph_face * g_face + h_Face * pg_face) * surface_tension_y  &
+        flux(2) = (ph_face * g_face + h_face * pg_face) * surface_tension_y  &
             + h_face * g_face * (p(ix, iy, 2) * surface_tension_d1(ix, iy)  &
-                - p(ix, iy-1, 2) * surface_tension(ix, iy-1)) / dy  &
+                - p(ix, iy-1, 2) * surface_tension_d1(ix, iy-1)) / dy  &
             - delta * pg_y
     end subroutine compute_y_flux
     

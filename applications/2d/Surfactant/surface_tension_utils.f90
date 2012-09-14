@@ -1,4 +1,5 @@
 subroutine compute_surface_tension(nx, ny, surfactant, surface_tension)
+    implicit none
     double precision :: beta, kappa, delta, mu, right_film_height
     common /surfactant_config/ beta, kappa, delta, mu, right_film_height
 
@@ -8,8 +9,8 @@ subroutine compute_surface_tension(nx, ny, surfactant, surface_tension)
 
     integer :: ix, iy
 
-    do iy = 1, my
-        do ix = 1, mx
+    do iy = 1, ny
+        do ix = 1, nx
             surface_tension(ix, iy) = (1.d0 + mu * surfactant(ix, iy))**(-3)
         ! surface_tension(i) = 1.d0 - surfactant(i)
         end do
@@ -18,6 +19,7 @@ end subroutine compute_surface_tension
 
 
 subroutine compute_surface_tension_d1(nx, ny, surfactant, surface_tension_d1)
+    implicit none
     double precision :: beta, kappa, delta, mu, right_film_height
     common /surfactant_config/ beta, kappa, delta, mu, right_film_height
 

@@ -44,23 +44,27 @@ subroutine b4step2(maxmx, maxmy, mbc, mx, my, meqn, q,  &
     call compute_surface_tension(mx+2*mbc, my+2*mbc, q(:, :, 2), surface_tension)
 
     do iy = 1, my
-        x_lower_values(1, iy) = derivative1(surface_tension(-1:2, iy))
+        x_lower_values(1, iy) = 0.d0 !derivative1(surface_tension(-1:2, iy), dx)
         do ix = 1, mx
             aux(ix, iy, 1) = centered_x_derivative(surface_tension, ix, iy)
         end do
-        x_upper_values(1, iy) = derivative1(surface_tension(mx-1:mx+2, iy))
+        x_upper_values(1, iy) = 0.d0 !derivative1(surface_tension(mx-1:mx+2, iy), dx)
     end do
     call fill_ghost_cells(bc_options, x_lower_values, x_upper_values, junk, junk, aux(:, :, 1))
 
     do iy = 1, my
-        x_lower_values(1, iy) = y_derivative_at_x_interface(surface_tension, 0, iy)
+        x_lower_values(1, iy) = 0.d0 !y_derivative_at_x_interface(surface_tension, 0, iy)
         do ix = 1, mx
             aux(ix, iy, 2) = centered_y_derivative(surface_tension, ix, iy)
         end do
-        x_upper_values(1, iy) = y_derivative_at_x_interface(surface_tension, mx+1, iy)
+        x_upper_values(1, iy) = 0.d0 !y_derivative_at_x_interface(surface_tension, mx+1, iy)
     end do
     call fill_ghost_cells(bc_options, x_lower_values, x_upper_values, junk, junk, aux(:, :, 2))
     
+
+    ! print *, x_lower_values(1, 10)
+    ! print *, aux(-1:3, 10, 1)
+
 
     ! TODO: Move calculate_laplacian to library.
     call calculate_laplacian(q(:, :, 1), film_laplacian)
@@ -69,9 +73,9 @@ subroutine b4step2(maxmx, maxmy, mbc, mx, my, meqn, q,  &
     ! interface_d1_4cell, etc.
     do iy = 1, my
         film_face = derivative0(q(-1:2, iy, 1))
-        film_x = derivative1(q(-1:2, iy, 1))
+        film_x = derivative1(q(-1:2, iy, 1), dx)
         film_laplacian_x = (film_laplacian(1, iy) - film_laplacian(0, iy)) / dx
-        x_lower_values(1, iy) = surfactant_velocity(film_face, film_x, film_laplacian_x)
+        x_lower_values(1, iy) = 0.d0 !surfactant_velocity(film_face, film_x, film_laplacian_x)
 
         do ix = 1, mx
             film_x = centered_x_derivative(q(:, :, 1), ix, iy)
@@ -80,9 +84,9 @@ subroutine b4step2(maxmx, maxmy, mbc, mx, my, meqn, q,  &
         end do
         
         film_face = derivative0(q(mx-1:mx+2, iy, 1))
-        film_x = derivative1(q(mx-1:mx+2, iy, 1))
+        film_x = derivative1(q(mx-1:mx+2, iy, 1), dx)
         film_laplacian_x = (film_laplacian(mx+1, iy) - film_laplacian(mx, iy)) / dx
-        x_upper_values(1, iy) = surfactant_velocity(film_face, film_x, film_laplacian_x)
+        x_upper_values(1, iy) = 0.d0 !surfactant_velocity(film_face, film_x, film_laplacian_x)
     end do
     call fill_ghost_cells(bc_options, x_lower_values, x_upper_values, junk, junk, aux(:, :, 3))
 
@@ -90,7 +94,7 @@ subroutine b4step2(maxmx, maxmy, mbc, mx, my, meqn, q,  &
         film_face = derivative0(q(-1:2, iy, 1))
         film_y = y_derivative_at_x_interface(q(:, :, 1), 0, iy)
         film_laplacian_y = y_derivative_at_x_interface(film_laplacian, 0, iy)
-        x_lower_values(1, iy) = surfactant_velocity(film_face, film_y, film_laplacian_y)
+        x_lower_values(1, iy) = 0.d0 !surfactant_velocity(film_face, film_y, film_laplacian_y)
 
         do ix = 1, mx
             film_y = centered_y_derivative(q(:, :, 1), ix, iy)
@@ -101,7 +105,7 @@ subroutine b4step2(maxmx, maxmy, mbc, mx, my, meqn, q,  &
         film_face = derivative0(q(mx-1:mx+2, iy, 1))
         film_y = y_derivative_at_x_interface(q(:, : ,1), mx+1, iy)
         film_laplacian_y = y_derivative_at_x_interface(film_laplacian, mx+1, iy)
-        x_upper_values(1, iy) = surfactant_velocity(film_face, film_y, film_laplacian_y)
+        x_upper_values(1, iy) = 0.d0 !surfactant_velocity(film_face, film_y, film_laplacian_y)
     end do
     call fill_ghost_cells(bc_options, x_lower_values, x_upper_values, junk, junk, aux(:, :, 4))
 

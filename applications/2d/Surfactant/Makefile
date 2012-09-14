@@ -22,8 +22,7 @@ CLAW_setplot_file = setplot.py      # File containing function to set plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -O3 -fbounds-check
-#-fbounds-check
+FFLAGS = -O3
 
 
 # ---------------------------------
@@ -38,10 +37,6 @@ CLAW_SOURCES = \
   implicit_operators.f90 \
   setprob.f90 \
 	surface_tension_utils.f90 \
-	RiemannSolver/b4step2.f90 \
-	RiemannSolver/bc2.f90 \
-	RiemannSolver/rpn2.f90 \
-	RiemannSolver/rpt2.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/2d/apply_newton_operator.f90 \
@@ -54,7 +49,12 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/src2.f90 \
   $(IMPLICIT_LIB)/2d/take_backward_euler_step.f90 \
   $(IMPLICIT_LIB)/2d/take_crank_nicolson_step.f90 \
-  $(IMPLICIT_LIB)/2d/take_forward_euler_step.f90
+  $(IMPLICIT_LIB)/2d/take_forward_euler_step.f90 \
+	RiemannSolver/b4step2.f90 \
+	RiemannSolver/bc2.f90 \
+	RiemannSolver/rpn2.f90 \
+	RiemannSolver/rpt2.f90
+	# $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \
 
 
 # Clawpack library to be used:

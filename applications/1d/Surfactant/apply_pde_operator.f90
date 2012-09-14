@@ -45,7 +45,8 @@ subroutine apply_pde_operator(t, q, output)
         h_face = d0x(q(ix-2:ix+1, 1))
         g_face = d0x(q(ix-2:ix+1, 2))
         flux(1) = h_face**3 / 3 * (-beta * d1x(q(ix-2:ix+1, 1)) + kappa * d3x(q(ix-2:ix+1, 1)))
-        flux(2) = h_face * g_face * d1x(surface_tension(ix-2:ix+1)) - delta * d1x(q(ix-2:ix+1, 2))
+        flux(2) = h_face * g_face * d1x(surface_tension(ix-2:ix+1)) -  &
+            delta * d1x(q(ix-2:ix+1, 2))
     end subroutine compute_flux
 
 end subroutine apply_pde_operator

@@ -9,7 +9,7 @@ subroutine fill_ghost_cells_homogeneous(bc_options, q)
     common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
 
     character(len=2), dimension(4), intent(in) :: bc_options
-    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc), intent(inout) :: q
     double precision, dimension(:, :), allocatable :: zeros
     integer :: i
 
@@ -19,7 +19,7 @@ subroutine fill_ghost_cells_homogeneous(bc_options, q)
     do i = 1, meqn
         ! Dimensions are correct; there are my horizontal strips and mx vertical strips.
         call fill_ghost_cells(bc_options, zeros(:, 1:my), zeros(:, 1:my),  &
-                              zeros(:, 1:mx), zeros(:, 1:mx), q(:, :, i))
+                              zeros(:, 1:mx), zeros(:, 1:mx), q(:, :))
     end do
 
 end subroutine fill_ghost_cells_homogeneous

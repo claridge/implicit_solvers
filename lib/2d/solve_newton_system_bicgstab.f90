@@ -134,7 +134,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate, success)
     end do
     
     if (cg_verbosity > 0) then
-        print '(A,I5,A,E16.10)', 'BiCGStab failed to converge after ', iter,  &
+        print '(A,I5,A,E16.10)', 'BiCGStab failed to converge after ', iter-1,  &
             'iterations.  Final residual_norm: ', residual_norm, '.'
     end if
     success = .true.

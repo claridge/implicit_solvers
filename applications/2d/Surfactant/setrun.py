@@ -42,7 +42,7 @@ def setrun(claw_pkg='classic'):
                        'implicit time step, should Newton''s method fail to '
                        'converge.')
 
-    probdata.add_param('newton_max_iter', 30,
+    probdata.add_param('newton_max_iter', 10,
                        'Max iterations for Newton''s method before enforcing reduction criterion')
     probdata.add_param('newton_reduction_factor', .5,
                        'Required reduction in residual norm for Newton''s method to continue '
@@ -51,14 +51,14 @@ def setrun(claw_pkg='classic'):
                        'Newton''s method stops when norm(delta(iterate)) is below this.')
     probdata.add_param('newton_verbosity', 2, 'Logging level for Newton''s method')
     
-    probdata.add_param('cg_tolerance', 1e-4,
+    probdata.add_param('cg_tolerance', 1e-6,
                        'CG or BiCGStab terminate when norm(residual) is below this.')
-    probdata.add_param('cg_verbosity', 2, 'Logging level for CG/BiCGStab')
+    probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
 
     probdata.add_param('num_threads', 1, 'Number of OpenMP threads.')
     
-    probdata.add_param('film_bc_options', ['13', '01', 'p', 'p'])
-    probdata.add_param('surfactant_bc_options', ['1', '0', 'p', 'p'])
+    probdata.add_param('film_bc_options', ['13', '13', 'p', 'p'])
+    probdata.add_param('surfactant_bc_options', ['1', '1', 'p', 'p'])
     
     probdata.add_param('beta', .271, 'gravitational constant')  # Estimated value: beta=.271
     probdata.add_param('kappa', .013, 'capillarity')  # Estimated value: kappa=.013
@@ -89,8 +89,8 @@ def setrun(claw_pkg='classic'):
         
 
     # Number of grid cells:
-    clawdata.mx = 100
-    clawdata.my = 100
+    clawdata.mx = 200
+    clawdata.my = 200
 
     # ---------------
     # Size of system:
@@ -126,8 +126,8 @@ def setrun(claw_pkg='classic'):
 
     if clawdata.outstyle==1:
         # Output nout frames at equally spaced times up to tfinal:
-        clawdata.nout = 10
-        clawdata.tfinal = 1.0
+        clawdata.nout = 1
+        clawdata.tfinal = 5.
 
     elif clawdata.outstyle == 2:
         # Specify a list of output times.  
