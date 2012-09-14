@@ -110,8 +110,8 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         call quintic_extrap(q(mx:mx-5:-1, my+1), q(mx+2:mx+1:-1, my+1))
         call quintic_extrap(q(mx:mx-5:-1, my+2), q(mx+2:mx+1:-1, my+2))
         temp_corner = q(mx+1:mx+2, my+1:my+2)
-        call quintic_extrap(q(mx+1, my:my-5:-1), q(mx+1, my+2:my+1))
-        call quintic_extrap(q(mx+2, my:my-5:-1), q(mx+2, my+2:my+1))
+        call quintic_extrap(q(mx+1, my:my-5:-1), q(mx+1, my+2:my+1:-1))
+        call quintic_extrap(q(mx+2, my:my-5:-1), q(mx+2, my+2:my+1:-1))
         q(mx+1:mx+2, my+1:my+2) = (q(mx+1:mx+2, my+1:my+2) + temp_corner) / 2.d0
     end if
 
@@ -242,6 +242,7 @@ end subroutine fill_ghost_cells
 
 
 subroutine quintic_extrap(source, dest)
+    implicit none
     double precision, dimension(6), intent(in) :: source
     double precision, dimension(2), intent(out) :: dest
     dest(1) = 21.d0 * source(1) - 70.d0 * source(2) + 105.d0 * source(3)  &
