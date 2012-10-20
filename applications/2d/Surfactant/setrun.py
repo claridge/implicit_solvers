@@ -168,7 +168,7 @@ def setrun(claw_pkg='classic'):
     
     # Max time step to be allowed if variable dt used:
     # clawdata.dt_max = clawdata.dt_initial
-    clawdata.dt_max = 1e-2
+    clawdata.dt_max = 1e-1  # Don't want the implicit steps getting too large.
     
     # Desired Courant number if variable dt used, and max to allow without 
     # retaking step with a smaller dt:
