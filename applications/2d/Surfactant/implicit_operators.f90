@@ -7,7 +7,7 @@ subroutine apply_pde_operator(t, q, output)
 !   q: PDE solution at time t.
 !   output: g(q), calculated here.
 
-    !# use omp_lib
+    !$ use omp_lib
     implicit none
     
     integer :: mx, my, mbc, meqn
@@ -30,6 +30,7 @@ subroutine apply_pde_operator(t, q, output)
     call calculate_laplacian(q(:,:,1), h_laplacian)
     call compute_surface_tension(mx+2*mbc, my+2*mbc, q(:, :, 2), surface_tension)
 
+    !$omp parallel do private(ix, lower_flux, upper_flux)
     do iy = 1, my
         do ix = 1, mx
             call compute_x_flux(ix, iy, lower_flux)
@@ -96,7 +97,7 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
 !   p: Perturbation to which the linearized operator is applied.
 !   output: g'[q](p), calculated here.
 
-    !# use omp_lib
+    !#$ use omp_lib
     implicit none
 
     integer :: mx, my, mbc, meqn
@@ -122,6 +123,7 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     call compute_surface_tension(mx+2*mbc, my+2*mbc, q(:,:,2), surface_tension)
     call compute_surface_tension_d1(mx+2*mbc, my+2*mbc, q(:,:,2), surface_tension_d1)
     
+    !$omp parallel do private(ix, lower_flux, upper_flux)
     do iy = 1, my
         do ix = 1, mx
             call compute_x_flux(ix, iy, lower_flux)

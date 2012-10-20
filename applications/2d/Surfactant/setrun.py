@@ -55,7 +55,7 @@ def setrun(claw_pkg='classic'):
                        'CG or BiCGStab terminate when norm(residual) is below this.')
     probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
 
-    probdata.add_param('num_threads', 1, 'Number of OpenMP threads.')
+    probdata.add_param('num_threads', 4, 'Number of OpenMP threads.')
     
     probdata.add_param('film_bc_options', ['13', '13', 'p', 'p'])
     probdata.add_param('surfactant_bc_options', ['1', '1', 'p', 'p'])
@@ -89,8 +89,8 @@ def setrun(claw_pkg='classic'):
         
 
     # Number of grid cells:
-    clawdata.mx = 200
-    clawdata.my = 200
+    clawdata.mx = 100
+    clawdata.my = 100
 
     # ---------------
     # Size of system:
@@ -168,7 +168,7 @@ def setrun(claw_pkg='classic'):
     
     # Max time step to be allowed if variable dt used:
     # clawdata.dt_max = clawdata.dt_initial
-    clawdata.dt_max = 100
+    clawdata.dt_max = 1e-2
     
     # Desired Courant number if variable dt used, and max to allow without 
     # retaking step with a smaller dt:

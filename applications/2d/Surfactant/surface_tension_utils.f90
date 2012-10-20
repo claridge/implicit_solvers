@@ -11,8 +11,8 @@ subroutine compute_surface_tension(nx, ny, surfactant, surface_tension)
 
     do iy = 1, ny
         do ix = 1, nx
-            surface_tension(ix, iy) = (1.d0 + mu * surfactant(ix, iy))**(-3)
-        ! surface_tension(i) = 1.d0 - surfactant(i)
+            ! surface_tension(ix, iy) = (1.d0 + mu * surfactant(ix, iy))**(-3)
+            surface_tension(ix, iy) = 1.d0 - surfactant(ix, iy)
         end do
     end do
 end subroutine compute_surface_tension
@@ -31,8 +31,8 @@ subroutine compute_surface_tension_d1(nx, ny, surfactant, surface_tension_d1)
 
     do iy = 1, ny
         do ix = 1, nx
-            surface_tension_d1(ix, iy) = -3.d0 * mu * (1.d0 + mu * surfactant(ix, iy))**(-4)
-            ! surface_tension_d1(i) = -1.d0
+            ! surface_tension_d1(ix, iy) = -3.d0 * mu * (1.d0 + mu * surfactant(ix, iy))**(-4)
+            surface_tension_d1(ix, iy) = -1.d0
         end do
     end do
 end subroutine compute_surface_tension_d1
