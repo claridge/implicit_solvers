@@ -14,24 +14,23 @@ TEST_FILES = [
   'applications/2d/LinearFourthOrder/accuracy_test.py'
   ]
 
-HOME = os.getcwd()  
+HOME = os.getcwd()
 
 for test_file in TEST_FILES:
   os.chdir(HOME)
   directory = os.path.dirname(test_file)
   file_name = os.path.basename(test_file)
   os.chdir(directory)
-  
+
   return_code = subprocess.call(['make', 'xclaw'])
   if return_code:
     print 'Make failed'
   else:
     subprocess.call(['python', file_name])
-  
+
 
 for test_file in TEST_FILES:
   os.chdir(HOME)
   directory = os.path.dirname(test_file)
   os.chdir(directory)
   return_code = subprocess.call(['make', 'clobber'])
-  

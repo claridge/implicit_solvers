@@ -23,3 +23,19 @@ double precision function inner_product(u, v)
     end do
 
 end function inner_product
+
+
+double precision function l2_norm(u)
+
+    implicit none
+    
+    integer :: mx, mbc, meqn
+    double precision :: x_lower, dx
+    common /claw_config/ mx, mbc, x_lower, dx, meqn
+
+    double precision, dimension(1-mbc:mx+mbc, meqn) :: u
+    double precision, external :: inner_product
+
+    l2_norm = sqrt(inner_product(u, u))
+
+end function l2_norm

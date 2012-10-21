@@ -31,13 +31,14 @@ FFLAGS = -O3
 IMPLICIT_LIB=../../../lib/1d
 
 CLAW_SOURCES = \
-	boundary_conditions.f90 \
-	implicit_operators.f90 \
-	initial_conditions.f90 \
+  apply_pde_operator.f90 \
+  boundary_conditions.f90 \
+  initial_conditions.f90 \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/apply_boundary_conditions.f90 \
   $(IMPLICIT_LIB)/apply_newton_operator.f90 \
+  $(IMPLICIT_LIB)/apply_linearized_pde_operator-approximate.f90 \
   $(IMPLICIT_LIB)/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \

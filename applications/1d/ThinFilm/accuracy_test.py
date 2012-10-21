@@ -69,6 +69,7 @@ def TrueSolution(x, t):
 
 if __name__ == '__main__':
   run_simulations, show_plots = accuracy_testing.ParseFlags()
+  print show_plots
 
   t_final = 0.2
   steps1 = t_final / 1e-1
@@ -77,7 +78,8 @@ if __name__ == '__main__':
   dt_values = array([t_final / n for n in num_steps])
   mx_min = 10
 
-  test = accuracy_testing.AccuracyTest(BuildRunData, TrueSolution, t_final, dt_values, mx_min)
+  test = accuracy_testing.AccuracyTest(
+      BuildRunData, TrueSolution, t_final, dt_values, mx_min)
 
   if run_simulations:
     test.RunSimulations()
@@ -98,5 +100,6 @@ if __name__ == '__main__':
     test.errors['LInfinity'].PlotDtFit('b:')
 
     pylab.legend(loc='lower right')
+    pylab.show()
 
   raw_input('Press ENTER to finish')
