@@ -30,14 +30,15 @@ FFLAGS = -O3 -fbounds-check
 # List of sources for this program:
 # ---------------------------------
 
-IMPLICIT_LIB=../../../lib
+IMPLICIT_LIB = $(IMPLICIT_CLAW)/lib
 
 CLAW_SOURCES = \
+	apply_pde_operator.f90 \
   boundary_conditions.f90 \
   initial_conditions.f90 \
-  implicit_operators.f90 \
   setprob.f90 \
   true_solution.f90 \
+  $(IMPLICIT_LIB)/experimental/apply_linearized_pde_operator-approx-2d.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/2d/apply_newton_operator.f90 \
