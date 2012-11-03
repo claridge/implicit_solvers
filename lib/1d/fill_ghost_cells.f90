@@ -1,4 +1,4 @@
-subroutine fill_ghost_cells_homogeneous(bc_options, q)
+subroutine fill_ghost_cells_homogeneous(bc_options, q_component)
 
 ! Fill ghost cells with homogeneous boundary conditions.
 
@@ -9,15 +9,13 @@ subroutine fill_ghost_cells_homogeneous(bc_options, q)
     common /claw_config/ mx, mbc, x_lower, dx, meqn
 
     character(len=2), dimension(2), intent(in) :: bc_options
-    double precision, dimension(1-mbc:mx+mbc, meqn), intent(inout) :: q
+    double precision, dimension(1-mbc:mx+mbc), intent(inout) :: q_component
     double precision, dimension(2) :: zeros
     integer :: i
 
     zeros = 0.d0
 
-    do i = 1, meqn
-        call fill_ghost_cells(bc_options, zeros, zeros, q(:, i))
-    end do
+    call fill_ghost_cells(bc_options, zeros, zeros, q_component)
 
 end subroutine fill_ghost_cells_homogeneous
 

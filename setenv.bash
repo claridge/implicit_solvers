@@ -1,3 +1,3 @@
 #!/bin/bash
-export IMPLICIT_CLAW_LIB=$PWD
+export IMPLICIT_CLAW=$PWD
 export PYTHONPATH="$PYTHONPATH":$PWD/lib/python

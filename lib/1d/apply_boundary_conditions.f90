@@ -46,7 +46,7 @@ subroutine apply_bcs(t, q)
     call set_implicit_boundary_data(t, lower_values, upper_values)
 
     do i = 1, meqn
-        call fill_ghost_cells(bc_options(:, i), lower_values, upper_values, q(:, i))
+        call fill_ghost_cells(bc_options(:, i), lower_values(:, i), upper_values(:, i), q(:, i))
     end do
-
+    
 end subroutine apply_bcs

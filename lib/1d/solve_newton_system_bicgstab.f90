@@ -38,7 +38,7 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
     double precision, dimension(1-mbc:mx+mbc, meqn) :: r, r_star, p, s, Ap, As
     double precision :: alpha, omega, beta, r_dot_r_star, r_dot_r_star_old
     double precision, external :: inner_product
-    double precision :: residual_norm
+    double precision :: residual_norm, denominator
 
     max_iter = 10 * mx
 
@@ -63,8 +63,17 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
 
     do iter = 1, max_iter
         call apply_newton_operator(t, dt, iterate, p, Ap)
-        alpha = inner_product(r, r_star) / inner_product(Ap, r_star)
-        ! TODO: Handle alpha=0 case.
+        denominator = inner_product(Ap, r_star)
+        alpha = inner_product(r, r_star) / denominator
+        
+        ! TODO: Not sure if this is reasonable.
+        if (denominator == 0.d0 .or. alpha == 0.d0) then
+            if (cg_verbosity > 0) then
+                print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition, ',  &
+                    'but reporting success anyway with residual_norm = ', residual_norm, '.'
+            end if
+            return
+        end if
 
         do ieqn = 1, meqn
             !$omp parallel do
@@ -74,7 +83,17 @@ subroutine solve_newton_system(t, dt, iterate, d_iterate)
         end do
 
         call apply_newton_operator(t, dt, iterate, s, As)
-        omega = inner_product(As, s) / inner_product(As, As)
+
+        denominator = inner_product(As, As)        
+        omega = inner_product(As, s) / denominator
+        if (denominator == 0.d0 .or. omega == 0.d0) then
+            if (cg_verbosity > 0) then
+                print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition, ',  &
+                    'but reporting success anyway with residual_norm = ', residual_norm, '.'
+            end if
+            return
+        end if        
+
         do ieqn = 1, meqn
             !$omp parallel do
             do ix = 1, mx
