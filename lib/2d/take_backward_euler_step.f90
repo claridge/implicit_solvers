@@ -80,7 +80,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
         end do
         norm_d_iterate = sqrt(inner_product(d_iterate, d_iterate))
 
-        if (newton_verbosity > 1) then
+        if (newton_verbosity > 0) then
            print '(A,I2,A,E16.10)', 'Newton iteration ', iter,  &
                 ', norm(d_iterate) = ', norm_d_iterate
         end if

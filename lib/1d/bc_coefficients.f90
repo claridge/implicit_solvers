@@ -9,14 +9,14 @@ subroutine get_lower_bc_coefficients(orders, dx, boundary_coefficients, cell_coe
         ! Linear extrapolation
         boundary_coefficients(1, 1) = 0.d0
         boundary_coefficients(2, 1) = 0.d0
-        cell_coefficients(1, 1) = 3.d0
-        cell_coefficients(2, 1) = -2.d0
-        cell_coefficients(3, 1) = 0.d0
+        cell_coefficients(1, 1) = 6.d0
+        cell_coefficients(2, 1) = -8.d0
+        cell_coefficients(3, 1) = 3.d0
         boundary_coefficients(1, 2) = 0.d0
         boundary_coefficients(2, 2) = 0.d0
-        cell_coefficients(1, 2) = 2.d0
-        cell_coefficients(2, 2) = -1.d0
-        cell_coefficients(3, 2) = 0.d0
+        cell_coefficients(1, 2) = 3.d0
+        cell_coefficients(2, 2) = -3.d0
+        cell_coefficients(3, 2) = 1.d0
     else if (orders == '0') then
         boundary_coefficients(1, 1) = 1.280000000000000d+01
         boundary_coefficients(2, 1) = 0.d0
@@ -121,14 +121,14 @@ subroutine get_upper_bc_coefficients(orders, dx, boundary_coefficients, cell_coe
         ! Linear extrapolation
         boundary_coefficients(1, 1) = 0.d0
         boundary_coefficients(2, 1) = 0.d0
-        cell_coefficients(1, 1) = 0.d0
-        cell_coefficients(2, 1) = -2.d0
+        cell_coefficients(1, 1) = 1.d0
+        cell_coefficients(2, 1) = -3.d0
         cell_coefficients(3, 1) = 3.d0
         boundary_coefficients(1, 2) = 0.d0
         boundary_coefficients(2, 2) = 0.d0
-        cell_coefficients(1, 2) = 0.d0
-        cell_coefficients(2, 2) = -1.d0
-        cell_coefficients(3, 2) = 2.d0
+        cell_coefficients(1, 2) = 3.d0
+        cell_coefficients(2, 2) = -8.d0
+        cell_coefficients(3, 2) = 6.d0
     else if (orders == '0') then
         boundary_coefficients(1, 1) = 3.200000000000001d+00
         boundary_coefficients(2, 1) = 0.d0

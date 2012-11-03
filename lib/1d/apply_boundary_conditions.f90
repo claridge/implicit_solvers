@@ -49,8 +49,4 @@ subroutine apply_bcs(t, q)
         call fill_ghost_cells(bc_options(:, i), lower_values(:, i), upper_values(:, i), q(:, i))
     end do
 
-    print *, q(mx-1:mx+2, 1)
-    q(mx+1, 1) = q(mx, 1) + (q(mx, 1) - q(mx-1, 1))
-    print *, q(mx-1:mx+2, 1)
-    print *, ''
 end subroutine apply_bcs

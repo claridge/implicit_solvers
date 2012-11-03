@@ -8,10 +8,12 @@ TEST_FILES = [
   'applications/1d/ThinFilm/accuracy_test.py',
   'applications/1d/LinearDiffusion/accuracy_test.py',
   'applications/1d/LinearFourthOrder/accuracy_test.py',
+  'applications/1d/SecondOrderSystem/accuracy_test.py',
   'applications/2d/PorousMedium/accuracy_test.py',
   'applications/2d/ThinFilm/accuracy_test.py',
   'applications/2d/LinearDiffusion/accuracy_test.py',
-  'applications/2d/LinearFourthOrder/accuracy_test.py'
+  'applications/2d/LinearFourthOrder/accuracy_test.py',
+  'applications/2d/SecondOrderSystem/accuracy_test.py',
   ]
 
 HOME = os.getcwd()

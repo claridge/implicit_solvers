@@ -45,8 +45,8 @@ subroutine apply_bcs(t, q)
                                     y_lower_values, y_upper_values)
 
     do i = 1, meqn
-        call fill_ghost_cells(bc_options(:, i), x_lower_values, x_upper_values,  &
-                              y_lower_values, y_upper_values, q(:, :, i))
+        call fill_ghost_cells(bc_options(:, i), x_lower_values(:, :, i), x_upper_values(:, :, i),  &
+                              y_lower_values(:, :, i), y_upper_values(:, :, i), q(:, :, i))
     end do
 
 end subroutine apply_bcs

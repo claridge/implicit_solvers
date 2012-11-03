@@ -18,16 +18,16 @@ def BuildRunData():
   probdata.add_param('cg_verbosity', 0)
   probdata.add_param('num_threads', 1)
   
-  probdata.add_param('bc_options', ['p', 'p', '0', '1'])
+  probdata.add_param('bc_options_1', ['0', 'n', '0', 'n'])
+  probdata.add_param('bc_options_2', ['0', '0', '0', '0'])
 
   clawdata = rundata.clawdata
   clawdata.ndim = 2
-  clawdata.xlower = -pi
-  clawdata.xupper = pi
-  clawdata.ylower = .2
-  clawdata.yupper = 1.2
-  clawdata.meqn = 1
-  clawdata.maux = 1
+  clawdata.xlower = .1
+  clawdata.xupper = .6
+  clawdata.ylower = .1
+  clawdata.yupper = .6
+  clawdata.meqn = 2
 
   clawdata.t0 = 0.0
   clawdata.nout = 1
@@ -46,8 +46,11 @@ def BuildRunData():
   return rundata
 
 
+_T0 = 1.
 def TrueSolution(x, y, t):
-  return exp(-2*t) * sin(x) * sin(y)
+    tau = t + _T0
+    rho = sqrt(x**2 + y**2) / tau**.25
+    return (2. * rho**2, -1./(8. * tau**.5) * log(rho))
 
 
 if __name__ == '__main__':

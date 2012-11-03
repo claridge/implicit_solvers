@@ -8,3 +8,4 @@
 - Useful error of BCs left unspecified for multiple equations
 - Update setenv.csh like setenv.bash
 - Move "ENTER to finish" to top level test
+- Make a lib Laplacian routine
