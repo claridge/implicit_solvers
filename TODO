@@ -1,0 +1,10 @@
+- Genericize names of the "CG" parameters
+- setprob_implicit is a bad name
+- Define a setaux_before_ method for each time-stepping routine
+- Define a per-iteration setaux_before_ routine in Newton's method.
+- Remove solver success for 2d
+- Loop on iteration number for Newton's method?
+- Move get_true_solution... to experimental.
+- Useful error of BCs left unspecified for multiple equations
+- Update setenv.csh like setenv.bash
+- Move "ENTER to finish" to top level test
