@@ -9,15 +9,10 @@ class ClawSolution:
     def __init__(self, directory='_output', frame_number=0):
 
         self.frame_number = frame_number
-        
-
-
         if directory[0] == '/':
             self.directory = directory
         else: 
             self.directory = getcwd() + '/' + directory
-
-        
 
         #---- Read parameters from time file ----
         
@@ -32,21 +27,18 @@ class ClawSolution:
 
         time_file.close()
         
-        
-        
-        #---- Read parameters from data file ----
-
-        # data_file_name = self.dataFileName(frame_number)
+        # Read parameters from data file
         data_file = self.dataFile(frame_number)
         
         data_file.readline()
         data_file.readline()
-        self.mx    = int( data_file.readline().split()[0] )
-        self.x_low = float( data_file.readline().split()[0] )
-        self.dx    = float( data_file.readline().split()[0] )
+        self.mx = int(data_file.readline().split()[0])
+        self.x_low = float(data_file.readline().split()[0])
+        self.dx = float(data_file.readline().split()[0])
         data_file.readline()
         
-        self.q    = zeros( (self.mx, self.meqn) )
+        self.q = zeros((self.mx, self.meqn))
+        self.values = self.q  # TODO: Get rid of self.q
 
         for i in range(self.mx):
             self.q[i,:] = array( map( float, data_file.readline().split() ) )
@@ -92,8 +84,6 @@ class ClawSolution:
                 self.q[i,:] = array( map( float, data_file.readline().split() ) )
                 
             data_file.close()
-                
-                
+
     def stepFrame(self):
-        
         self.setFrame(self.frame_number+1)

@@ -2,6 +2,7 @@ import setrun
 import pyclaw.data
 import pyclaw.runclaw
 
+from scipy import interpolate
 from numpy import *
 from numpy import linalg
 import pylab
@@ -13,12 +14,10 @@ import claw_solution_1d
 import claw_solution_2d
 
 
-def _GetOutputDirectory(i):
-  return '_output%02d' % i
-
-# Print green and red, respectively
+# Print 'OK' or 'FAILED' in green and red, respectively
 _OK = '\033[1;32mOK\033[1;m'
 _FAILED = '\033[1;31mFAILED\033[1;m' 
+
 
 class NumericalError(object):
   
@@ -91,8 +90,15 @@ class AccuracyTest(object):
     self.ndim = build_rundata().clawdata.ndim
     
     self.errors = None
+    
+  def _GetOutputDirectory(self, i):
+    return '_output%02d' % i    
 
   def RunSimulations(self):
+    """Makes xclaw and runs a simulation for each dt value."""
+    
+    # TODO: Natural to break here, as the make process carries its own
+    # expectation.
     return_code = subprocess.call(['make', 'xclaw'])
     if return_code:
       print '\'make xclaw\' unsuccessful ... ' + _FAILED
@@ -109,41 +115,82 @@ class AccuracyTest(object):
         clawdata.my = clawdata.mx
       rundata.write()
       pyclaw.runclaw.runclaw(xclawcmd='xclaw',
-                             outdir=_GetOutputDirectory(i))
+                             outdir=self._GetOutputDirectory(i))
     print 'Simulations executed ... ' + _OK
 
+  def _GetCellwiseError(self, solution):
+    """Gets cellwise error for a ClawSolution.
+    
+    Args:
+      solution: 1d or 2d ClawSolution
+    Returns:
+      error (magnitude) for each cell and solution component.  Shape is the
+        same as solution.values.
+    """
+    
+    if self.ndim == 1:
+      x_values = solution.GetCellCenters()
+      true_values = zeros((solution.mx, solution.meqn))
+      for ix in range(solution.mx):
+        true_values[ix, :] = self._true_solution(x_values[ix], self._t_final)
+    elif self.ndim == 2:
+      x, y = solution.GetCellCenters()
+      true_values = zeros((solution.mx, solution.my, solution.meqn))
+      for ix in xrange(solution.mx):
+        for iy in xrange(solution.my):
+          true_values[ix,iy,:] = self._true_solution(x[ix,iy], y[ix,iy], self._t_final)
+    return abs(solution.values - true_values)
+
   def CalculateErrors(self):
+    """Fills dictionary of numerical errors: L1, L2, and LInfinity.
+    
+    Call after RunSimulations.
+    """
+
+    i_skip = -1
+    if self._true_solution is None and self.ndim == 1:
+      i_skip = list(self._dt_values).index(min(self._dt_values))
+      most_refined = claw_solution_1d.ClawSolution(self._GetOutputDirectory(i_skip))
+      most_refined.SetFrame(1)
+        
+      f = interpolate.interp1d(
+          most_refined.GetCellCenters(), most_refined.values[:,0], kind='cubic')
+      self._true_solution = lambda x, t: f(x)
+    
     self.errors = {'L1': NumericalError('L1'),
                    'L2': NumericalError('L2'),
                    'LInfinity': NumericalError('LInfinity')}
+                   
     for i in xrange(len(self._dt_values)):
+      if i == i_skip: continue
+      
       if self.ndim == 1:
-        solution = claw_solution_1d.ClawSolution(_GetOutputDirectory(i))
-        solution.SetFrame(1)
-        true_solution = array([self._true_solution(x, self._t_final)
-                              for x in solution.GetCellCenters()])
-        cellwise_error = abs(solution.q[:,0] - true_solution)
-        for e in self.errors.itervalues():
-          e.AddDataPoint(self._dt_values[i], solution.dx, cellwise_error)
+        solution = claw_solution_1d.ClawSolution(self._GetOutputDirectory(i))
+        dx_vector = solution.dx
       elif self.ndim == 2:
-        solution = claw_solution_2d.ClawSolution(_GetOutputDirectory(i))
-        solution.SetFrame(1)
-        x, y = solution.GetCellCenters()
-        
-        true_solution = zeros((solution.mx, solution.my))
-        for ix in xrange(solution.mx):
-          for iy in xrange(solution.my):
-            true_solution[ix,iy] = self._true_solution(x[ix,iy], y[ix,iy], self._t_final)
+        solution = claw_solution_2d.ClawSolution(self._GetOutputDirectory(i))
+        dx_vector = (solution.dx, solution.dy)
 
-        cellwise_error = abs(solution.q[:,:,0] - true_solution)
-        for e in self.errors.itervalues():
-          e.AddDataPoint(self._dt_values[i], (solution.dx, solution.dy), cellwise_error)
-        
+      solution.SetFrame(1)
+      cellwise_error = self._GetCellwiseError(solution)
+
+      for e in self.errors.itervalues():
+        e.AddDataPoint(self._dt_values[i], dx_vector, cellwise_error)
 
     for e in self.errors.itervalues():
       e.PowerFit()
 
-  def CheckConvergenceOrder(self, name, target_order):    
+  def CheckConvergenceOrder(self, name, target_order):
+    """Checks that an error type matches the specified convergence order.
+    
+    Args:
+      name: Name of the error being specified; one of the valid names for
+        NumericalError.
+      target_order: The minimum order of convergence expected.
+    Returns:
+      A string indicating success or failure.
+    """
+    
     def _Status(passing):
       if passing:
         return _OK
@@ -154,6 +201,24 @@ class AccuracyTest(object):
     exponent = error.exponent
     passing = exponent > target_order
     return '%s error ~ dt**%f ... %s' % (name, exponent, _Status(passing))
+    
+  def PlotErrors(self):
+    self.errors['L1'].Plot('ro')
+    self.errors['L1'].PlotDtFit('r:')
+
+    self.errors['L2'].Plot('go')
+    self.errors['L2'].PlotDtFit('g:')
+
+    self.errors['LInfinity'].Plot('bo')
+    self.errors['LInfinity'].PlotDtFit('b:')
+    
+    pylab.legend(loc='best')
+    pylab.show()
+    
+
+def FakeTrueSolution(x, t, refined_solution):
+  return interpolate.interp1d(
+      x, refined_solution.GetCellCenters(), refined_solution.values[:,0])
 
 
 def ParseFlags():
