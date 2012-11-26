@@ -1,8 +1,6 @@
 Fundamental/high priority changes:
 - Create access points for aux array management, and pass aux to interface routines.
 - Make sure BC-parsing logic is reasonably intelligent
-- Change apply_homogeneous_bcs to apply_linearized_bcs, with appropriate touch of generality
-- Call apply_bcs/apply_linearized_bcs strictly before apply_pde_operator/apply_linearized_pde_operator.
 - fill_ghost_cells should get the entire q array and a component index.
 - 2d interpolation for corner ghost cells
 
