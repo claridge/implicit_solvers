@@ -5,7 +5,6 @@ Fundamental/high priority changes:
 - Call apply_bcs/apply_linearized_bcs strictly before apply_pde_operator/apply_linearized_pde_operator.
 - fill_ghost_cells should get the entire q array and a component index.
 - 2d interpolation for corner ghost cells
-- Use routine name and organization as in implementation section of paper
 
 Cleanup:
 - Loop on iteration number for Newton's method?

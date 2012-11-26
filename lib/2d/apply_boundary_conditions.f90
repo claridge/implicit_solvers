@@ -1,6 +1,6 @@
-subroutine apply_homogeneous_bcs(q)
+subroutine apply_linearized_bcs(r, p)
 
-! Apply the relevant homogeneous boundary condition operator.
+! Apply linearized boundary conditions to the Newton perturbation.
 
     implicit none
 
@@ -11,14 +11,15 @@ subroutine apply_homogeneous_bcs(q)
     character(len=2), dimension(4, 10) :: bc_options
     common /bc_config/ bc_options
 
-    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(in) :: r
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: p
     integer :: i
 
     do i = 1, meqn
-        call fill_ghost_cells_homogeneous(bc_options(:, i), q(:,:,i))
+        call fill_ghost_cells_homogeneous(bc_options(:, i), p(:,:,i))
     end do
 
-end subroutine apply_homogeneous_bcs
+end subroutine apply_linearized_bcs
 
 
 subroutine apply_bcs(t, q)
