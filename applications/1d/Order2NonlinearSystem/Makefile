@@ -21,14 +21,14 @@ CLAW_PLOTDIR = _plots               # Directory for plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -O3
+FFLAGS ?= -O3
 
 
 # ---------------------------------
 # List of sources for this program:
 # ---------------------------------
 
-IMPLICIT_LIB = $(IMPLICIT_CLAW)/lib
+IMPLICIT_LIB = $(IMPLICIT_CLAW)/lib/1d
 
 CLAW_SOURCES = \
   apply_pde_operator.f90 \
@@ -36,23 +36,22 @@ CLAW_SOURCES = \
   initial_conditions.f90 \
   setprob.f90 \
   true_solution.f90 \
-  $(IMPLICIT_LIB)/1d/apply_boundary_conditions.f90 \
-  $(IMPLICIT_LIB)/1d/apply_newton_operator.f90 \
-  $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
-  $(IMPLICIT_LIB)/1d/driver.f90 \
-  $(IMPLICIT_LIB)/1d/extend_to_ghost_cells.f90 \
-  $(IMPLICIT_LIB)/1d/fill_ghost_cells.f90 \
-  $(IMPLICIT_LIB)/1d/inner_product.f90 \
-  $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
-  $(IMPLICIT_LIB)/1d/null_riemann_solver.f90 \
-  $(IMPLICIT_LIB)/1d/setprob_implicit.f90 \
-  $(IMPLICIT_LIB)/1d/solve_newton_system_bicgstab.f90 \
-  $(IMPLICIT_LIB)/1d/src1.f90 \
-  $(IMPLICIT_LIB)/1d/take_backward_euler_step.f90 \
-  $(IMPLICIT_LIB)/1d/take_crank_nicolson_step.f90 \
-  $(IMPLICIT_LIB)/1d/take_forward_euler_step.f90 \
-  $(IMPLICIT_LIB)/experimental/apply_linearized_pde_operator-approx-1d.f90
-#apply_linearized_pde_operator.f90
+  $(IMPLICIT_LIB)/apply_boundary_conditions.f90 \
+  $(IMPLICIT_LIB)/bc_coefficients.f90 \
+  $(IMPLICIT_LIB)/driver.f90 \
+  $(IMPLICIT_LIB)/fill_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/get_backward_euler_lhs.f90 \
+  $(IMPLICIT_LIB)/get_backward_euler_rhs.f90 \
+  $(IMPLICIT_LIB)/inner_product.f90 \
+  $(IMPLICIT_LIB)/interface_derivatives.f90 \
+  $(IMPLICIT_LIB)/null_riemann_solver.f90 \
+  $(IMPLICIT_LIB)/setprob_implicit.f90 \
+  $(IMPLICIT_LIB)/solve_backward_euler_system-bicgstab.f90 \
+  $(IMPLICIT_LIB)/src1.f90 \
+  $(IMPLICIT_LIB)/take_backward_euler_step.f90 \
+  $(IMPLICIT_LIB)/take_crank_nicolson_step.f90 \
+  $(IMPLICIT_LIB)/take_forward_euler_step.f90 \
+  $(IMPLICIT_CLAW)/lib/experimental/apply_linearized_pde_operator-approx-1d.f90
 
 
 # Clawpack libraries to be used:

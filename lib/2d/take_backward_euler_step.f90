@@ -29,10 +29,9 @@ subroutine take_backward_euler_step(t, dt, q, success)
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) ::  &
         d_iterate, iterate
-    double precision :: norm_d_iterate, old_norm_d_iterate
+    double precision :: norm_d_iterate, old_norm_d_iterate, residual_norm
     integer :: iter, ix, iy, ieqn
     double precision, external :: inner_product
-    logical :: solver_success
 
 
     success = .false.
@@ -55,16 +54,9 @@ subroutine take_backward_euler_step(t, dt, q, success)
 
         iter = iter + 1
 
-        call apply_bcs(t + dt, iterate)
-        call calculate_newton_rhs(iterate, d_iterate)
-        call solve_newton_system(t, dt, iterate, d_iterate, solver_success)
-
-        if (.not. solver_success) then
-            if (newton_verbosity > 0) then
-                print *, "Linear solver failed; Newton's method aborting."
-            end if
-            return
-        end if
+        call get_backward_euler_rhs(t, dt, q, iterate, d_iterate)
+        ! residual_norm is currently unused.
+        call solve_backward_euler_system(t, dt, iterate, d_iterate, residual_norm)
 
         old_norm_d_iterate = norm_d_iterate
         norm_d_iterate = 0.d0
@@ -116,27 +108,5 @@ subroutine take_backward_euler_step(t, dt, q, success)
         end if
 
     end do
-
-
-    contains
-
-    subroutine calculate_newton_rhs(iterate, rhs)
-        implicit none
-        double precision, intent(in), dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: iterate
-        double precision, intent(out), dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: rhs
-        integer :: ix
-
-        call apply_pde_operator(t, iterate, rhs)
-
-        do ieqn = 1, meqn
-            !$omp parallel do private(ix)
-            do iy = 1, my
-                do ix = 1, mx
-                    rhs(ix, iy, ieqn) = q(ix, iy, ieqn) - iterate(ix, iy, ieqn)  &
-                        + dt * rhs(ix, iy, ieqn)
-                end do
-            end do
-        end do
-    end subroutine calculate_newton_rhs
 
 end subroutine take_backward_euler_step

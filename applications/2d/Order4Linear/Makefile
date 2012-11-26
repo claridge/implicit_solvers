@@ -38,15 +38,16 @@ CLAW_SOURCES = \
   true_solution.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
-  $(IMPLICIT_LIB)/2d/apply_newton_operator.f90 \
   $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
   $(IMPLICIT_LIB)/2d/fill_ghost_cells.f90 \
+  $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
+  $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
   $(IMPLICIT_LIB)/2d/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
   $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \
   $(IMPLICIT_LIB)/2d/setprob_implicit.f90 \
-  $(IMPLICIT_LIB)/2d/solve_newton_system_bicgstab.f90 \
+  $(IMPLICIT_LIB)/2d/solve_backward_euler_system-bicgstab.f90 \
   $(IMPLICIT_LIB)/2d/src2.f90 \
   $(IMPLICIT_LIB)/2d/take_backward_euler_step.f90 \
   $(IMPLICIT_LIB)/2d/take_crank_nicolson_step.f90 \

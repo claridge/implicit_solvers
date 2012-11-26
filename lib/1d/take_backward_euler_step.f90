@@ -27,7 +27,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
          newton_tolerance, newton_verbosity
 
     double precision, dimension(1-mbc:mx+mbc, meqn) :: d_iterate, iterate
-    double precision :: norm_d_iterate, old_norm_d_iterate
+    double precision :: norm_d_iterate, old_norm_d_iterate, residual_norm
     integer :: iter, ix, ieqn
     double precision, external :: inner_product
 
@@ -36,8 +36,6 @@ subroutine take_backward_euler_step(t, dt, q, success)
     norm_d_iterate = newton_tolerance + 1.d0
     old_norm_d_iterate = norm_d_iterate
     iter = 0
-
-    call apply_bcs(t, q)
 
     do ieqn = 1, meqn
         !$omp parallel do
@@ -50,9 +48,9 @@ subroutine take_backward_euler_step(t, dt, q, success)
 
         iter = iter + 1
 
-        call apply_bcs(t + dt, iterate)
-        call calculate_newton_rhs(iterate, d_iterate)
-        call solve_newton_system(t, dt, iterate, d_iterate)
+        call get_backward_euler_rhs(t, dt, q, iterate, d_iterate)
+        ! residual_norm is currently unused.
+        call solve_backward_euler_system(t, dt, iterate, d_iterate, residual_norm)
 
         old_norm_d_iterate = norm_d_iterate
         norm_d_iterate = 0.d0
@@ -99,25 +97,5 @@ subroutine take_backward_euler_step(t, dt, q, success)
         end if
 
     end do
-
-
-    contains
-
-    subroutine calculate_newton_rhs(iterate, rhs)
-        implicit none
-        double precision, intent(in), dimension(1-mbc:mx+mbc, meqn) :: iterate
-        double precision, intent(out), dimension(1-mbc:mx+mbc, meqn) :: rhs
-        integer :: ix
-
-        call apply_pde_operator(t, iterate, rhs)
-
-        do ieqn = 1, meqn
-            !$omp parallel do
-            do ix = 1, mx
-                rhs(ix, ieqn) = q(ix, ieqn) - iterate(ix, ieqn) + dt *  &
-                    rhs(ix, ieqn)
-            end do
-        end do
-    end subroutine calculate_newton_rhs
 
 end subroutine take_backward_euler_step

@@ -40,7 +40,7 @@ CLAW_SOURCES = \
   riemann_solver.f90 \
   setprob.f90 \
   surface_tension_utils.f90 \
-  $(IMPLICIT_LIB)/apply_newton_operator.f90 \
+  $(IMPLICIT_LIB)/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
   $(IMPLICIT_LIB)/inner_product.f90 \

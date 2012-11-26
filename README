@@ -1,1 +1,14 @@
-This repository contains code for my implicit solvers project.
+Naming conventions
+==================
+Fortran files generally define one subroutine and are named in the form routine_name.f90.  If a given routine has natural variants, the pattern routine_name-variant.f90.  For example, solve_backward_euler_system-bicgstab.f90 defines the subroutine solve_backward_euler_system using the BiCGStab solver. 
+
+
+Testing
+=======
+Each test case is a script named test_convergence.py.  They are built on the unittest module and require features that were made available in Python 2.7.
+
+Tests may be run individually by a simple invocation of 
+    python test_convergence.py
+They may also be run in discoverable mode via
+    python -m unittest discover
+which will run all scripts beginning with "test" in discoverable subdirectories (i.e. if every subdirectory between the current directory and the script directory has an __init__.py).

@@ -1,4 +1,4 @@
-subroutine apply_newton_operator(t, dt, iterate, d_iterate, output)
+subroutine get_backward_euler_lhs(t, dt, iterate, d_iterate, output)
 
 !----------------------------------------------------------------
 ! Calculates
@@ -41,4 +41,4 @@ subroutine apply_newton_operator(t, dt, iterate, d_iterate, output)
         end do
     end do
     
-end subroutine apply_newton_operator
+end subroutine get_backward_euler_lhs

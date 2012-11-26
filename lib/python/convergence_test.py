@@ -54,7 +54,7 @@ class NumericalError(object):
     if self.name == 'L1':
       return sum(abs(cellwise_error)) * dv
     elif self.name == 'L2':
-      return sqrt(sum(cellwise_error**2)) * dv
+      return sqrt(sum(cellwise_error**2) * dv)
     elif self.name == 'LInfinity':
       return abs(cellwise_error).max()
       

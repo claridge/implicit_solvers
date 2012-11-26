@@ -38,9 +38,8 @@ CLAW_SOURCES = \
   qinit.f90 \
   rp1.f90 \
   setprob.f90 \
-  $(IMPLICIT_LIB)/apply_newton_operator.f90 \
+  $(IMPLICIT_LIB)/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
-  $(IMPLICIT_LIB)/extend_to_ghost_cells.f90 \
   $(IMPLICIT_LIB)/inner_product.f90 \
   $(IMPLICIT_LIB)/src1.f90 \
   $(IMPLICIT_LIB)/solve_newton_system_bicgstab.f90 \
