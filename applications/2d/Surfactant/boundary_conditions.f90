@@ -17,7 +17,7 @@ subroutine set_implicit_boundary_data(t, x_lower_values, x_upper_values,  &
     integer :: iy
     
     x_lower_values(:, :, 1) = 0.d0
-    x_upper_values(1, :, 1) = 0.d0 ! right_film_height
+    x_upper_values(1, :, 1) = right_film_height
     x_upper_values(2, :, 1) = 0.d0
 
     x_lower_values(:, :, 2) = 0.d0

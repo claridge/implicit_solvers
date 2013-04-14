@@ -106,11 +106,8 @@ subroutine extend_to_ghost_cells (mx, my, mbc,  &
     ! Local
     integer :: ix, iy, iy_target
     logical :: lsame
-    !$ integer :: nthreads
-    !$ common /omp_block/ nthreads
     !<--- Variables <---
 
-    !$ call omp_set_num_threads(nthreads)
 
     !---> Perform x-extension --->
     if ( lsame(x_extension_type, 'e') ) then  ! Even extension

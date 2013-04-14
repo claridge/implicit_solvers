@@ -29,14 +29,15 @@ FFLAGS = -O3 -fopenmp
 # List of sources for this program:
 # ---------------------------------
 
-IMPLICIT_LIB=../../../lib
+IMPLICIT_LIB=$(IMPLICIT_CLAW)/lib
+SURFACTANT_BASE=..
 
 CLAW_SOURCES = \
-  boundary_conditions.f90 \
-  initial_conditions.f90 \
+  $(SURFACTANT_BASE)/boundary_conditions.f90 \
+  $(SURFACTANT_BASE)/initial_conditions.f90 \
   apply_pde_operator.f90 \
-  setprob.f90 \
-	surface_tension_utils.f90 \
+  $(SURFACTANT_BASE)/setprob.f90 \
+	$(SURFACTANT_BASE)/surface_tension_utils.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/experimental/apply_linearized_pde_operator-approx-2d.f90 \
@@ -52,10 +53,11 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/take_backward_euler_step.f90 \
   $(IMPLICIT_LIB)/2d/take_crank_nicolson_step.f90 \
   $(IMPLICIT_LIB)/2d/take_forward_euler_step.f90 \
-	RiemannSolver/b4step2.f90 \
-	RiemannSolver/bc2.f90 \
-	RiemannSolver/rpn2.f90 \
-	RiemannSolver/rpt2.f90
+  $(IMPLICIT_LIB)/2d/null_riemann_solver.f90
+	# $(SURFACTANT_BASE)/RiemannSolver/b4step2.f90 \
+	# $(SURFACTANT_BASE)/RiemannSolver/bc2.f90 \
+	# $(SURFACTANT_BASE)/RiemannSolver/rpn2.f90 \
+	# $(SURFACTANT_BASE)/RiemannSolver/rpt2.f90
 
 	# Utilities/surface_tension.f90 \
 	# Utilities/laplacian.f90 \

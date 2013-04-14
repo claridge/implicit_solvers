@@ -36,7 +36,7 @@ def setrun(claw_pkg='classic'):
 
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
 
-    probdata.add_param('implicit_integration_scheme', 'Backward Euler')
+    probdata.add_param('implicit_integration_scheme', 'Crank-Nicolson')
     probdata.add_param('max_time_step_splits', 2,
                        'Max number of times to halve the lenght of the '
                        'implicit time step, should Newton''s method fail to '
@@ -57,8 +57,8 @@ def setrun(claw_pkg='classic'):
 
     probdata.add_param('num_threads', 4, 'Number of OpenMP threads.')
     
-    probdata.add_param('film_bc_options', ['13', '13', 'p', 'p'])
-    probdata.add_param('surfactant_bc_options', ['1', '1', 'p', 'p'])
+    probdata.add_param('film_bc_options', ['13', '01', 'p', 'p'])
+    probdata.add_param('surfactant_bc_options', ['1', '0', 'p', 'p'])
     
     probdata.add_param('beta', 0., 'gravitational constant')  # Estimated value: beta=.271
     probdata.add_param('kappa', 1e-4, 'capillarity')  # Estimated value: kappa=.013
@@ -164,7 +164,7 @@ def setrun(claw_pkg='classic'):
     
     # Initial time step for variable dt.  
     # If dt_variable==0 then dt=dt_initial for all steps:
-    clawdata.dt_initial = 1e-3
+    clawdata.dt_initial = .1
     
     # Max time step to be allowed if variable dt used:
     # clawdata.dt_max = clawdata.dt_initial
