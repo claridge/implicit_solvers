@@ -37,6 +37,7 @@ CLAW_SOURCES = \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/apply_boundary_conditions.f90 \
+  $(IMPLICIT_LIB)/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
   $(IMPLICIT_LIB)/fill_ghost_cells.f90 \
@@ -51,9 +52,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/src1.f90 \
   $(IMPLICIT_LIB)/take_backward_euler_step.f90 \
   $(IMPLICIT_LIB)/take_crank_nicolson_step.f90 \
-  $(IMPLICIT_LIB)/take_forward_euler_step.f90 \
-  $(IMPLICIT_CLAW)/lib/experimental/apply_linearized_pde_operator-approx-1d.f90
-
+  $(IMPLICIT_LIB)/take_forward_euler_step.f90
 
 # Clawpack libraries to be used:
 CLAW_LIB = $(CLAW)/clawpack/1d/lib

@@ -36,10 +36,10 @@ CLAW_SOURCES = \
   initial_conditions.f90 \
   setprob.f90 \
   true_solution.f90 \
-  $(IMPLICIT_LIB)/experimental/apply_linearized_pde_operator-approx-2d.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
+  $(IMPLICIT_LIB)/2d/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
   $(IMPLICIT_LIB)/2d/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
