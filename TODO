@@ -10,6 +10,7 @@ Cleanup:
 - setprob_implicit is a bad name
 - Genericize names of the "CG" parameters
 - Make a lib Laplacian routine.  Maybe a 'utilities' directory?
+- Split up lib/*/apply_boundary_conditions.f90 by routine
 
 Would be nice:
 - Update setenv.csh like setenv.bash

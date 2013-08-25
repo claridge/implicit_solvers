@@ -22,7 +22,7 @@ CLAW_setplot_file = setplot.py      # File containing function to set plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -O3
+FFLAGS = -O3 -fno-align-commons
 
 # ---------------------------------
 # List of sources for this program:
@@ -31,9 +31,11 @@ FFLAGS = -O3
 IMPLICIT_LIB=../../../lib
 
 CLAW_SOURCES = \
+  apply_pde_operator.f90 \
+  apply_linearized_pde_operator.f90 \
+  calculate_laplacian.f90 \
   boundary_conditions.f90 \
   initial_conditions.f90 \
-  implicit_operators.f90 \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \

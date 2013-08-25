@@ -1,3 +1,16 @@
+Environment variables
+=====================
+Running this code requires that you:
+1. Set up environment variables for Clawpack;
+2. Set the environment variables in setenv.bash/setenv.csh.
+For setenv.bash, you can "source setenv.bash" to do this.  If I recall correctly, this doesn't work for setenv.csh, and you have to execute the commands directly (or perhaps in your .cshrc file).  But my csh is atrocious -- the bash case is much better tested here.
+
+
+Implementing a new problem
+==========================
+TODO
+
+
 Naming conventions
 ==================
 Fortran files generally define one subroutine and are named in the form routine_name.f90.  If a given routine has natural variants, the pattern routine_name-variant.f90.  For example, solve_backward_euler_system-bicgstab.f90 defines the subroutine solve_backward_euler_system using the BiCGStab solver. 

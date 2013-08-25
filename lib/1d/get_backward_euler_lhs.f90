@@ -27,10 +27,10 @@ subroutine get_backward_euler_lhs(t, dt, r, p, output)
 
     integer :: ix, ieqn
 
-    
+    call apply_bcs(t + dt, r)
     call apply_linearized_bcs(r, p)                                                         
-    call apply_linearized_pde_operator(t, r, p, output)
-    
+    call apply_linearized_pde_operator(t + dt, r, p, output)
+        
     do ieqn = 1, meqn
         !$omp parallel do
         do ix = 1,mx

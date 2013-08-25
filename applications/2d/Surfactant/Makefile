@@ -22,7 +22,7 @@ CLAW_setplot_file = setplot.py      # File containing function to set plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -O3 -fopenmp
+FFLAGS ?= -O3 -fopenmp -fno-align-commons
 
 
 # ---------------------------------
@@ -39,7 +39,7 @@ CLAW_SOURCES = \
 	surface_tension_utils.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
-  $(IMPLICIT_LIB)/experimental/apply_linearized_pde_operator-approx-2d.f90 \
+  $(IMPLICIT_LIB)/2d/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
   $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \

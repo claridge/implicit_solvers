@@ -22,7 +22,7 @@ subroutine get_backward_euler_rhs(t, dt, q, r, rhs)
     integer :: ix, ieqn
 
     call apply_bcs(t + dt, r)
-    call apply_pde_operator(t, r, rhs)
+    call apply_pde_operator(t + dt, r, rhs)
 
     do ieqn = 1, meqn
         !$omp parallel do

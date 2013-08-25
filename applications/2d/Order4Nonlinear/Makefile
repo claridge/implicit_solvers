@@ -34,6 +34,7 @@ IMPLICIT_LIB=../../../lib
 
 CLAW_SOURCES = \
 	apply_pde_operator.f90 \
+  apply_linearized_pde_operator.f90 \
   boundary_conditions.f90 \
   initial_conditions.f90 \
   setprob.f90 \
@@ -41,7 +42,6 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
   $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
-  $(IMPLICIT_LIB)/2d/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
   $(IMPLICIT_LIB)/2d/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
