@@ -42,9 +42,8 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
-  $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
+  $(IMPLICIT_LIB)/2d/builtin_bc_routines.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
-	$(IMPLICIT_LIB)/2d/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
   $(IMPLICIT_LIB)/2d/setprob_implicit.f90 \
   $(IMPLICIT_LIB)/2d/solve_backward_euler_system-bicgstab.f90 \

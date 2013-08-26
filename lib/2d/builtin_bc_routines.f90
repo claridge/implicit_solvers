@@ -1,4 +1,59 @@
-subroutine fill_ghost_cells_homogeneous(bc_options, q_component)
+subroutine apply_linearized_bcs(r, p)
+
+! Apply linearized boundary conditions to the Newton perturbation.
+
+    implicit none
+
+    integer :: mx, my, mbc, meqn
+    double precision :: x_lower, y_lower, dx, dy
+    common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
+
+    character(len=2), dimension(4, 10) :: bc_options
+    common /bc_config/ bc_options
+
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(in) :: r
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: p
+    integer :: i
+
+    do i = 1, meqn
+        call fill_component_ghost_cells_homogeneous(bc_options(:, i), p(:,:,i))
+    end do
+
+end subroutine apply_linearized_bcs
+
+
+subroutine apply_bcs(t, q)
+
+! Fill ghost cells with appropriate boundary values.
+
+    implicit none
+
+    integer :: mx, my, mbc, meqn
+    double precision :: x_lower, y_lower, dx, dy
+    common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
+
+    character(len=2), dimension(4, 10) :: bc_options
+    common /bc_config/ bc_options
+
+    double precision, intent(in) :: t
+    double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(inout) :: q
+
+    double precision, dimension(2, my, meqn) :: x_lower_values, x_upper_values
+    double precision, dimension(2, mx, meqn) :: y_lower_values, y_upper_values
+    integer :: i
+
+    call set_implicit_boundary_data(t, x_lower_values, x_upper_values,  &
+                                    y_lower_values, y_upper_values)
+
+    do i = 1, meqn
+        call fill_component_ghost_cells(bc_options(:, i), x_lower_values(:, :, i), x_upper_values(:, :, i),  &
+                              y_lower_values(:, :, i), y_upper_values(:, :, i), q(:, :, i))
+    end do
+
+end subroutine apply_bcs
+
+
+subroutine fill_component_ghost_cells_homogeneous(bc_options, q_component)
 
 ! Fill ghost cells with homogeneous boundary conditions.
 
@@ -17,16 +72,16 @@ subroutine fill_ghost_cells_homogeneous(bc_options, q_component)
     zeros = 0.d0
 
     ! Dimensions are correct; there are my horizontal strips and mx vertical strips.
-    call fill_ghost_cells(bc_options, zeros(:, 1:my), zeros(:, 1:my),  &
+    call fill_component_ghost_cells(bc_options, zeros(:, 1:my), zeros(:, 1:my),  &
                           zeros(:, 1:mx), zeros(:, 1:mx), q_component)
 
-end subroutine fill_ghost_cells_homogeneous
+end subroutine fill_component_ghost_cells_homogeneous
 
 
 
 ! TODO: Move to separate file, and add dedicated homogeneous method for
 ! convenience.
-subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
+subroutine fill_component_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
                         y_lower_values, y_upper_values, q)
 
 ! Fills ghost cells on either side of the domain for a single solution
@@ -236,7 +291,7 @@ subroutine fill_ghost_cells(bc_options, x_lower_values, x_upper_values,  &
         end if
     end subroutine set_y_upper_ghost_cells
 
-end subroutine fill_ghost_cells
+end subroutine fill_component_ghost_cells
 
 
 subroutine quintic_extrap(source, dest)

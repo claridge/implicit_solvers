@@ -1,7 +1,6 @@
 Fundamental/high priority changes:
 - Create access points for aux array management, and pass aux to interface routines.
 - Make sure BC-parsing logic is reasonably intelligent
-- fill_ghost_cells should get the entire q array and a component index.
 - 2d interpolation for corner ghost cells
 
 Cleanup:
@@ -11,6 +10,7 @@ Cleanup:
 - Genericize names of the "CG" parameters
 - Make a lib Laplacian routine.  Maybe a 'utilities' directory?
 - Split up lib/*/apply_boundary_conditions.f90 by routine
+- Kill old 1d derivative routines
 
 Would be nice:
 - Update setenv.csh like setenv.bash

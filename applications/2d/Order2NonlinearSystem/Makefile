@@ -39,10 +39,9 @@ CLAW_SOURCES = \
   true_solution.f90 \
   $(IMPLICIT_LIB)/1d/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/1d/interface_derivatives.f90 \
-  $(IMPLICIT_LIB)/2d/apply_boundary_conditions.f90 \
+  $(IMPLICIT_LIB)/2d/builtin_bc_routines.f90 \
   $(IMPLICIT_LIB)/2d/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
-  $(IMPLICIT_LIB)/2d/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \

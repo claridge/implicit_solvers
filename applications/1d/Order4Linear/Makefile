@@ -37,10 +37,9 @@ CLAW_SOURCES = \
 	initial_conditions.f90 \
   setprob.f90 \
   true_solution.f90 \
-  $(IMPLICIT_LIB)/apply_boundary_conditions.f90 \
+  $(IMPLICIT_LIB)/builtin_bc_routines.f90 \
   $(IMPLICIT_LIB)/bc_coefficients.f90 \
   $(IMPLICIT_LIB)/driver.f90 \
-  $(IMPLICIT_LIB)/fill_ghost_cells.f90 \
   $(IMPLICIT_LIB)/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/get_backward_euler_rhs.f90 \
   $(IMPLICIT_LIB)/get_true_solution_by_index_range.f90 \
