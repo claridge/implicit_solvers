@@ -43,6 +43,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/apply_linearized_pde_operator.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
+  $(IMPLICIT_LIB)/2d/get_laplacian.f90 \
   $(IMPLICIT_LIB)/2d/builtin_bc_routines.f90 \
   $(IMPLICIT_LIB)/2d/driver.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
@@ -53,30 +54,6 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/take_crank_nicolson_step.f90 \
   $(IMPLICIT_LIB)/2d/take_forward_euler_step.f90 \
   $(IMPLICIT_LIB)/2d/null_riemann_solver.f90
-	# $(SURFACTANT_BASE)/RiemannSolver/b4step2.f90 \
-	# $(SURFACTANT_BASE)/RiemannSolver/bc2.f90 \
-	# $(SURFACTANT_BASE)/RiemannSolver/rpn2.f90 \
-	# $(SURFACTANT_BASE)/RiemannSolver/rpt2.f90
-
-	# Utilities/surface_tension.f90 \
-	# Utilities/laplacian.f90 \
-	# Utilities/extend_to_ghosts.f90 \
-	# Utilities/periodic_banded_solve.f90 \
-	# Parabolic/src2.f90 \
-	#   Parabolic/film_parabolic_step.f90 \
-	#   Parabolic/film_newton_rhs.f90 \
-	# Parabolic/film_integrate_slice.f90 \
-	#   Parabolic/film_integrate_slice_periodic.f90 \
-	# Parabolic/film_sparse_flux.f90 \
-	#   Parabolic/film_sparse_flux_periodic.f90 \
-	#   Parabolic/surfactant_parabolic_step.f90 \
-	#   Parabolic/surfactant_newton_rhs.f90 \
-	# Parabolic/surfactant_sparse_flux.f90 \
-	#   Parabolic/surfactant_sparse_flux_periodic.f90 \
-	# Parabolic/surfactant_integrate_slice.f90 \
-	#   Parabolic/surfactant_integrate_slice_periodic.f90
-  
-	# $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \
 
 
 # Clawpack library to be used:

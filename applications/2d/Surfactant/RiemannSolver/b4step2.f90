@@ -66,8 +66,7 @@ subroutine b4step2(maxmx, maxmy, mbc, mx, my, meqn, q,  &
     ! print *, aux(-1:3, 10, 1)
 
 
-    ! TODO: Move calculate_laplacian to library.
-    call calculate_laplacian(q(:, :, 1), film_laplacian)
+    call get_laplacian(q(:, :, 1), film_laplacian)
 
     ! TODO: Perhaps name derivative routines more descriptively?  interface_d1_2cell,
     ! interface_d1_4cell, etc.

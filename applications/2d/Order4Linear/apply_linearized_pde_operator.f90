@@ -22,8 +22,8 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: p_laplacian
 
-    call calculate_laplacian(p(:,:,1), p_laplacian)
-    call calculate_laplacian(p_laplacian, output(:,:,1))
+    call get_laplacian(p(:,:,1), p_laplacian)
+    call get_laplacian(p_laplacian, output(:,:,1))
     output = -output
 
 end subroutine apply_linearized_pde_operator

@@ -27,7 +27,7 @@ subroutine apply_pde_operator(t, q, output)
     double precision, dimension(2) :: lower_flux, upper_flux
 
 
-    call calculate_laplacian(q(:,:,1), h_laplacian)
+    call get_laplacian(q(:,:,1), h_laplacian)
     call compute_surface_tension(mx+2*mbc, my+2*mbc, q(:, :, 2), surface_tension)
 
     !$omp parallel do private(ix, lower_flux, upper_flux)
@@ -118,8 +118,8 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision, dimension(2) :: lower_flux, upper_flux
 
 
-    call calculate_laplacian(q(:,:,1), h_laplacian)
-    call calculate_laplacian(p(:,:,1), ph_laplacian)
+    call get_laplacian(q(:,:,1), h_laplacian)
+    call get_laplacian(p(:,:,1), ph_laplacian)
     call compute_surface_tension(mx+2*mbc, my+2*mbc, q(:,:,2), surface_tension)
     call compute_surface_tension_d1(mx+2*mbc, my+2*mbc, q(:,:,2), surface_tension_d1)
     
@@ -197,32 +197,3 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     end subroutine compute_y_flux
     
 end subroutine apply_linearized_pde_operator
-
-
-subroutine calculate_laplacian(q, q_laplacian)
-
-! Calculate Laplacian of q at cell centers.  Fills ghost cells within the
-! outermost layer.
-
-    !# use omp_lib
-    implicit none
-
-    integer :: mx, my, mbc, meqn
-    double precision :: x_lower, y_lower, dx, dy
-    common /claw_config/ mx, my, mbc, x_lower, y_lower, dx, dy, meqn
-
-    double precision, dimension(1-mbc:mx+mbc,1-mbc:my+mbc), intent(in) :: q
-    double precision, dimension(1-mbc:mx+mbc,1-mbc:my+mbc), intent(out) :: q_laplacian
-
-    integer :: ix, iy
-
-    !#omp parallel do private(ix)
-    do iy = 2-mbc,my+mbc-1
-        do ix = 2-mbc,mx+mbc-1
-            q_laplacian(ix,iy) = (q(ix-1,iy) - 2.d0*q(ix,iy) + q(ix+1,iy)) / dx**2
-            q_laplacian(ix,iy) = q_laplacian(ix,iy) + (q(ix,iy-1) - 2.d0*q(ix,iy) +  &
-                                 q(ix,iy+1)) / dy**2
-        end do
-    end do
-    
-end subroutine calculate_laplacian

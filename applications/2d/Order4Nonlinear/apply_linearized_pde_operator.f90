@@ -25,8 +25,8 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision, external :: derivative0
 
     
-    call calculate_laplacian(q(:,:,1), q_laplacian)
-    call calculate_laplacian(p(:,:,1), p_laplacian)
+    call get_laplacian(q(:,:,1), q_laplacian)
+    call get_laplacian(p(:,:,1), p_laplacian)
     
     !#omp parallel do private(ix)
     do iy = 1, my

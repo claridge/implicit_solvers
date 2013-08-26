@@ -8,10 +8,9 @@ Cleanup:
 - Move get_true_solution... to experimental.
 - setprob_implicit is a bad name
 - Genericize names of the "CG" parameters
-- Make a lib Laplacian routine.  Maybe a 'utilities' directory?
-- Split up lib/*/apply_boundary_conditions.f90 by routine
 - Kill old 1d derivative routines
 
 Would be nice:
 - Update setenv.csh like setenv.bash
 - Expose initial guess for newton's method?
+- Control number of threads with an environment variable

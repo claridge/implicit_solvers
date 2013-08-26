@@ -33,7 +33,6 @@ IMPLICIT_LIB=../../../lib
 CLAW_SOURCES = \
   apply_pde_operator.f90 \
   apply_linearized_pde_operator.f90 \
-  calculate_laplacian.f90 \
   boundary_conditions.f90 \
   initial_conditions.f90 \
   setprob.f90 \
@@ -44,6 +43,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/driver.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
+  $(IMPLICIT_LIB)/2d/get_laplacian.f90 \
   $(IMPLICIT_LIB)/2d/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
   $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \

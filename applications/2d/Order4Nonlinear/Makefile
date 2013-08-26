@@ -22,8 +22,7 @@ CLAW_setplot_file = setplot.py      # File containing function to set plots
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 FC ?= gfortran   # default if not set as environment variable
 # Add any desired compiler flags such as -g here:
-FFLAGS = -O3 -fbounds-check
-#-fbounds-check
+FFLAGS ?= -O3 -fno-align-commons
 
 
 # ---------------------------------
@@ -45,6 +44,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/driver.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_lhs.f90 \
   $(IMPLICIT_LIB)/2d/get_backward_euler_rhs.f90 \
+  $(IMPLICIT_LIB)/2d/get_laplacian.f90 \
   $(IMPLICIT_LIB)/2d/get_true_solution_by_index_range.f90 \
   $(IMPLICIT_LIB)/2d/inner_product.f90 \
   $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \

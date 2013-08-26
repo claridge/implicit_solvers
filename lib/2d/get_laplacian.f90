@@ -1,4 +1,4 @@
-subroutine calculate_laplacian(q, q_laplacian)
+subroutine get_laplacian(q, q_laplacian)
 
 ! Calculate Laplacian of q at cell centers.  Fills ghost cells within the
 ! outermost layer.
@@ -24,4 +24,4 @@ subroutine calculate_laplacian(q, q_laplacian)
         end do
     end do
     
-end subroutine calculate_laplacian
+end subroutine get_laplacian

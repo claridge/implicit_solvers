@@ -20,8 +20,8 @@ subroutine apply_pde_operator(t, q, output)
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: q_laplacian
 
-    call calculate_laplacian(q(:,:,1), q_laplacian)    
-    call calculate_laplacian(q_laplacian, output(:,:,1))
+    call get_laplacian(q(:,:,1), q_laplacian)    
+    call get_laplacian(q_laplacian, output(:,:,1))
     output = -output
     
 end subroutine apply_pde_operator
