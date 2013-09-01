@@ -17,7 +17,6 @@ subroutine apply_pde_operator(t, q, output)
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(in), target :: q
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(out) :: output
 
-    double precision, external :: derivative3
     integer :: ix
 
 

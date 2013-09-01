@@ -1,3 +1,10 @@
+! These routines evaluate 1-dimensional derivatives at an interface by using
+! 4-cell centered stencils.  Mostly intended to use arbitrary boundary
+! conditions when a true solution is available.
+!
+! They will work in a pinch anywhere you need a derivative, but performance
+! takes a big hit if you make pointwise function calls at every grid cell.
+
 double precision function derivative0(q)
     implicit none
     double precision, dimension(4), intent(in) :: q

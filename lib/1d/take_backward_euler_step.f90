@@ -44,10 +44,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
         end do
     end do
 
-    do while (norm_d_iterate > newton_tolerance)
-
-        iter = iter + 1
-
+    do iter = 1, newton_max_iter
         call get_backward_euler_rhs(t, dt, q, iterate, d_iterate)
         ! residual_norm is currently unused.
         call solve_backward_euler_system(t, dt, iterate, d_iterate, residual_norm)
@@ -87,15 +84,11 @@ subroutine take_backward_euler_step(t, dt, q, success)
             end if
             exit
         end if
-
-        ! If we've hit the max # of iterations, give up unless we're making
-        ! sufficient progress.
-        if ((iter >= newton_max_iter) .and.  &
-            (norm_d_iterate > newton_reduction_factor *  &
-             old_norm_d_iterate)) then
-            exit
-        end if
-
     end do
+    
+    if (newton_verbosity > 0) then
+        print '(A,I2)', 'Newton''s method failed to converge after ',  &
+            newton_max_iter, 'iterations.'
+    end if
 
 end subroutine take_backward_euler_step

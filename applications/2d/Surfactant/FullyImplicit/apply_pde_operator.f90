@@ -24,7 +24,6 @@ subroutine apply_pde_operator(t, q, output)
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: h_laplacian, surface_tension
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn) :: x_flux, y_flux
     integer :: ix, iy, ieqn
-    double precision, external :: derivative0, derivative1
     double precision, dimension(2) :: lower_flux, upper_flux
     double precision :: h_face, h_x, h_laplacian_x, g_face, g_x, surface_tension_x
     double precision :: h_y, h_laplacian_y, g_y, surface_tension_y

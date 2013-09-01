@@ -20,25 +20,26 @@ subroutine apply_linearized_pde_operator(t, q, p, output)
     double precision, dimension(1-mbc:mx+mbc, meqn), intent(out) :: output
 
     integer :: ix
-    double precision, external :: derivative0, derivative3
+    double precision, dimension(1:mx+1) :: fprime  ! Linearized flux
+    double precision :: q1_face, p1_face, q1_xxx, p1_xxx
 
+    ! Compute linearized flux at interfaces.
+    !$omp parallel do
+    do ix = 1, mx+1
+        q1_face = (q(ix-1, 1) + q(ix, 1)) / 2.d0
+        p1_face = (p(ix-1, 1) + p(ix, 1)) / 2.d0
+        q1_xxx =  &
+            (-q(ix-2, 1) + 3 * q(ix-1, 1) - 3 * q(ix, 1) + q(ix+1, 1))  &
+            / dx**3
+        p1_xxx =  &
+            (-p(ix-2, 1) + 3 * p(ix-1, 1) - 3 * p(ix, 1) + p(ix+1, 1))  &
+            / dx**3
+        fprime(ix) = q1_xxx * p1_face + q1_face * p1_xxx                
+    end do
 
+    !$omp parallel do
     do ix = 1, mx
         output(ix, 1) = -(fprime(ix+1) - fprime(ix)) / dx
     end do
-
-
-    contains 
-
-    double precision function fprime(ix)
-        implicit none
-        integer :: ix
-        double precision :: q1_face, p1_face, q1_xxx, p1_xxx
-        q1_face = derivative0(q(ix-2:ix+1, 1))
-        p1_face = derivative0(p(ix-2:ix+1, 1))
-        q1_xxx = derivative3(q(ix-2:ix+1, 1), dx)
-        p1_xxx = derivative3(p(ix-2:ix+1, 1), dx)
-        fprime = q1_xxx * p1_face + q1_face * p1_xxx
-    end function fprime
 
 end subroutine apply_linearized_pde_operator
