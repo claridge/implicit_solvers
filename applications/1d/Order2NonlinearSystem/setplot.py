@@ -27,13 +27,20 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.title = 'Solution'
     plotaxes.xlimits = 'auto'
-    plotaxes.ylimits = [0.35, 0.65]
+    plotaxes.ylimits = [0.0, 1.5]
 
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
     plotitem.plotstyle = '-o'
     plotitem.color = 'b'
+    plotitem.show = True       # show on plot?
+
+    # Set up for item on these axes:
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = 1
+    plotitem.plotstyle = '-o'
+    plotitem.color = 'r'
     plotitem.show = True       # show on plot?
     
     # Parameters used only when creating html and/or latex hardcopy

@@ -7,6 +7,7 @@ function setplot is called to set the plot parameters.
     
 """ 
 
+
 #--------------------------
 def setplot(plotdata):
 #--------------------------
@@ -18,24 +19,50 @@ def setplot(plotdata):
     
     """ 
 
-    plotdata.clearfigures()  # clear any old figures,axes,items data
 
-    # Figure for q[0]
-    plotfigure = plotdata.new_plotfigure(name='q[0]', figno=1)
+    from pyclaw.plotters import colormaps
+
+    plotdata.clearfigures()  # clear any old figures,axes,items data
+    
+
+    # Figure for pcolor plot
+    plotfigure = plotdata.new_plotfigure(name='pcolor', figno=0)
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.title = 'Solution'
     plotaxes.xlimits = 'auto'
-    plotaxes.ylimits = [0.35, 0.65]
+    plotaxes.ylimits = 'auto'
+    plotaxes.title = 'q[0]'
+    plotaxes.afteraxes = "pylab.axis('scaled')" 
 
     # Set up for item on these axes:
-    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
-    plotitem.plotstyle = '-o'
-    plotitem.color = 'b'
+    plotitem.pcolor_cmap = colormaps.yellow_red_blue
+    plotitem.pcolor_cmin = 1.0
+    plotitem.pcolor_cmax = 2.0
+    plotitem.add_colorbar = True
     plotitem.show = True       # show on plot?
     
+    # Figure for contour plot
+    plotfigure = plotdata.new_plotfigure(name='contour', figno=1)
+
+    # Set up for axes in this figure:
+    plotaxes = plotfigure.new_plotaxes()
+    plotaxes.xlimits = 'auto'
+    plotaxes.ylimits = 'auto'
+    plotaxes.title = 'q[0]'
+    plotaxes.afteraxes = "pylab.axis('scaled')" 
+
+    # Set up for item on these axes:
+    plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
+    plotitem.plot_var = 0
+    plotitem.contour_nlevels = 20
+    plotitem.contour_min = 1.0
+    plotitem.contour_max = 2.0
+    plotitem.show = True       # show on plot?
+    
+
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via pyclaw.plotters.frametools.printframes:
 

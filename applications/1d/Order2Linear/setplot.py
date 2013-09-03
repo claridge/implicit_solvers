@@ -17,7 +17,6 @@ def setplot(plotdata):
     Output: a modified version of plotdata.
     
     """ 
-    
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
 
@@ -28,20 +27,14 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.title = 'Solution'
     plotaxes.xlimits = 'auto'
-    plotaxes.ylimits = 'auto'
+    plotaxes.ylimits = [0.0, 1.0]
 
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
-    plotitem.plotstyle = 'o'
+    plotitem.plotstyle = '-o'
     plotitem.color = 'b'
-    # plotitem.show = plot_anything       # show on plot?
-
-    # plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    # plotitem.plot_var = 1
-    # plotitem.plotstyle = '-'
-    # plotitem.color = 'r'
-
+    plotitem.show = True       # show on plot?
     
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via pyclaw.plotters.frametools.printframes:
@@ -55,7 +48,7 @@ def setplot(plotdata):
     plotdata.latex = True                    # create latex file of plots?
     plotdata.latex_figsperline = 2           # layout of plots
     plotdata.latex_framesperline = 1         # layout of plots
-    plotdata.latex_makepdf = True           # also run pdflatex?
+    plotdata.latex_makepdf = False           # also run pdflatex?
 
     return plotdata
 

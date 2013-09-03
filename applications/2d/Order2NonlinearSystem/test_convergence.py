@@ -15,7 +15,9 @@ def BuildRunData():
   probdata.add_param('linear_solver_tolerance', 1e-8)
   probdata.add_param('linear_solver_verbosity', 0)
   probdata.add_param('num_threads', 1)
-  
+
+  # Parameter names don't actually matter; just add 2 parameters with
+  # appropriate formatting.  
   probdata.add_param('bc_options_1', ['0', 'n', '0', 'n'])
   probdata.add_param('bc_options_2', ['0', '0', '0', '0'])
 

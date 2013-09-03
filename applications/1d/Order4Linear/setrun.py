@@ -29,59 +29,33 @@ def setrun(claw_pkg='Classic'):
 
     rundata = data.ClawRunData(pkg=claw_pkg, ndim=1)
 
-    #------------------------------------------------------------------
-    # Problem-specific parameters to be written to setprob.data:
-    #------------------------------------------------------------------
+    probdata = rundata.new_UserData(name='probdata', fname='setprob.data')
+    probdata.add_param('implicit_integration_scheme', 'Crank-Nicolson')
+    probdata.add_param('newton_max_iter', 10)
+    probdata.add_param('newton_tolerance', 1e-8)
+    probdata.add_param('newton_verbosity', 0)
+    probdata.add_param('linear_solver_tolerance', 1e-8)
+    probdata.add_param('linear_solver_verbosity', 0)
+    probdata.add_param('bc_options', ['01', '13'])
 
-    probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
-
-    probdata.add_param('implicit_integration_scheme', 'Backward Euler')
-
-    probdata.add_param('newton_max_iter', 30, 'Max iterations for Newton''s method')
-    probdata.add_param('newton_tolerance', .1e-8, 'Newton''s method stops when '
-                       'norm(delta(iterate)) is below this.')
-    probdata.add_param('newton_verbosity', 1, 'Logging level for Newton''s method')
-    
-    probdata.add_param('linear_solver_tolerance', 1e-12, 'CG or BiCGStab terminate when '
-                       'norm(residual) is below this.')
-    probdata.add_param('linear_solver_verbosity', 1, 'Logging level for CG/BiCGStab')
-
-    
-    #------------------------------------------------------------------
-    # Standard Clawpack parameters to be written to claw.data:
-    #------------------------------------------------------------------
-
-    clawdata = rundata.clawdata  # initialized when rundata instantiated
+    clawdata = rundata.clawdata
     clawdata.ndim = 1
-    clawdata.xlower = -pi
-    clawdata.xupper = pi
-    dx = .05
-    clawdata.mx = int(round((clawdata.xupper - clawdata.xlower) / dx))
     clawdata.meqn = 1
-    clawdata.maux = 1
-    clawdata.mcapa = 0
-    clawdata.t0 = 0.0
-    clawdata.outstyle = 1
-    clawdata.nout = 50
-    clawdata.tfinal = .5
+
+    clawdata.xlower = .1
+    clawdata.xupper = 1.1
+    clawdata.mx = 50
+
+    clawdata.tfinal = 0.5
+    clawdata.dt_initial = 0.05
+
+    clawdata.nout = 10
     clawdata.verbosity = 1
     clawdata.dt_variable = 0
-    clawdata.dt_initial = 1e-3
-    clawdata.dt_max = 1e+99
-    clawdata.cfl_desired = 0.9
-    clawdata.cfl_max = 1.0
-    clawdata.max_steps = 10000
-    clawdata.order = 2
-    clawdata.order_trans = 0
-    clawdata.mwaves = 1
-    clawdata.mthlim = [0]
     clawdata.src_split = 1
     clawdata.mbc = 2
-    clawdata.mthbc_xlower = 0  # Not used
-    clawdata.mthbc_xupper = 0  # Not used
     
     return rundata
-
 
 
 if __name__ == '__main__':
