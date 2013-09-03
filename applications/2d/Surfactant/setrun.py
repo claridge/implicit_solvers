@@ -36,10 +36,9 @@ def setrun(claw_pkg='classic'):
 
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
 
-    probdata.add_param('implicit_integration_scheme', 'Backward Euler')
+    probdata.add_param('implicit_integration_scheme', 'Crank-Nicolson')
 
-    probdata.add_param('newton_max_iter', 100,
-                       'Max iterations for Newton''s method before enforcing reduction criterion')
+    probdata.add_param('newton_max_iter', 30, 'Max iterations for Newton''s method')
     probdata.add_param('newton_tolerance', 1e-4,
                        'Newton''s method stops when norm(delta(iterate)) is below this.')
     probdata.add_param('newton_verbosity', 2, 'Logging level for Newton''s method')
@@ -50,8 +49,8 @@ def setrun(claw_pkg='classic'):
 
     probdata.add_param('num_threads', 4, 'Number of OpenMP threads.')
     
-    probdata.add_param('film_bc_options', ['13', '13', 'p', 'p'])
-    probdata.add_param('surfactant_bc_options', ['1', '1', 'p', 'p'])
+    probdata.add_param('film_bc_options', ['13', '01', 'p', 'p'])
+    probdata.add_param('surfactant_bc_options', ['1', '0', 'p', 'p'])
     
     probdata.add_param('beta', 0., 'gravitational constant')  # Estimated value: beta=.271
     probdata.add_param('kappa', 1e-4, 'capillarity')  # Estimated value: kappa=.013
@@ -157,7 +156,7 @@ def setrun(claw_pkg='classic'):
     
     # Initial time step for variable dt.  
     # If dt_variable==0 then dt=dt_initial for all steps:
-    clawdata.dt_initial = 1e-3
+    clawdata.dt_initial = .1
     
     # Max time step to be allowed if variable dt used:
     # clawdata.dt_max = clawdata.dt_initial

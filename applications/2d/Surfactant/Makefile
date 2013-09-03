@@ -29,7 +29,7 @@ FFLAGS ?= -O3 -fopenmp -fno-align-commons
 # List of sources for this program:
 # ---------------------------------
 
-IMPLICIT_LIB=../../../lib
+IMPLICIT_LIB=$(IMPLICIT_CLAW)/lib
 
 CLAW_SOURCES = \
   boundary_conditions.f90 \
@@ -52,30 +52,7 @@ CLAW_SOURCES = \
   $(IMPLICIT_LIB)/2d/take_backward_euler_step.f90 \
   $(IMPLICIT_LIB)/2d/take_crank_nicolson_step.f90 \
   $(IMPLICIT_LIB)/2d/take_forward_euler_step.f90 \
-	RiemannSolver/b4step2.f90 \
-	RiemannSolver/bc2.f90 \
-	RiemannSolver/rpn2.f90 \
-	RiemannSolver/rpt2.f90
-
-	# Utilities/surface_tension.f90 \
-	# Utilities/laplacian.f90 \
-	# Utilities/extend_to_ghosts.f90 \
-	# Utilities/periodic_banded_solve.f90 \
-	# Parabolic/src2.f90 \
-	#   Parabolic/film_parabolic_step.f90 \
-	#   Parabolic/film_newton_rhs.f90 \
-	# Parabolic/film_integrate_slice.f90 \
-	#   Parabolic/film_integrate_slice_periodic.f90 \
-	# Parabolic/film_sparse_flux.f90 \
-	#   Parabolic/film_sparse_flux_periodic.f90 \
-	#   Parabolic/surfactant_parabolic_step.f90 \
-	#   Parabolic/surfactant_newton_rhs.f90 \
-	# Parabolic/surfactant_sparse_flux.f90 \
-	#   Parabolic/surfactant_sparse_flux_periodic.f90 \
-	# Parabolic/surfactant_integrate_slice.f90 \
-	#   Parabolic/surfactant_integrate_slice_periodic.f90
-  
-	# $(IMPLICIT_LIB)/2d/null_riemann_solver.f90 \
+  $(IMPLICIT_LIB)/2d/null_riemann_solver.f90
 
 
 # Clawpack library to be used:
