@@ -22,9 +22,8 @@ subroutine take_backward_euler_step(t, dt, q, success)
     logical, intent(out) :: success
 
     integer :: newton_max_iter, newton_verbosity
-    double precision :: newton_reduction_factor, newton_tolerance
-    common /newton_config/ newton_max_iter, newton_reduction_factor,  &
-         newton_tolerance, newton_verbosity
+    double precision :: newton_tolerance
+    common /newton_config/ newton_max_iter, newton_tolerance, newton_verbosity
 
     double precision, dimension(1-mbc:mx+mbc, meqn) :: d_iterate, iterate
     double precision :: norm_d_iterate, old_norm_d_iterate, residual_norm
@@ -68,7 +67,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
         ! Give up if norm_d_iterate gets too big, as this indicates nonconvergence
         if (norm_d_iterate > 1e6) exit
 
-        ! If we've converged, then finish.
+        ! If we've converged, then update the solution and return.
         if (norm_d_iterate < newton_tolerance) then
             do ieqn = 1, meqn
                 !$omp parallel do
@@ -82,7 +81,7 @@ subroutine take_backward_euler_step(t, dt, q, success)
                print '(A,I2,A,E16.10)', 'Newton''s method finished after ',  &
                     iter, ' iterations with norm(d_iterate) = ', norm_d_iterate
             end if
-            exit
+            return
         end if
     end do
     

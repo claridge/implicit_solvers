@@ -1,18 +1,10 @@
-Fundamental/high priority changes:
-- Create access points for aux array management, and pass aux to interface routines.
-  - Can use b4step2; aux shouldn't be used for solution-dependent stuff, anyway
-  - Will leave out "work" arrays until working with modules
-- Make sure BC-parsing logic is reasonably intelligent
-  - Like, sanity-checking the periodic case?
-- 2d interpolation for corner ghost cells
-  - Not such a big deal, I don't think
-
-Cleanup:
-- Move get_true_solution... and interface_derivatives to a utilities directory, or something like that.
-- setprob_implicit is a bad name
-- Genericize names of the "CG" parameters
+Necessary:
+- Usable setrun.py for each application
 
 Would be nice:
+- Sanity-check when periodic BCs are specified
+- Better logging when max_time_steps=0
 - Update setenv.csh like setenv.bash
 - Expose initial guess for newton's method?
-- Control number of threads with an environment variable
+- Control params with environment variables
+- 2d interpolation for corner ghost cells

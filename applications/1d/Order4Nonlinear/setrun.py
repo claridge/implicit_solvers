@@ -36,23 +36,15 @@ def setrun(claw_pkg='Classic'):
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
     
     probdata.add_param('implicit_integration_scheme', 'Backward Euler')
-    probdata.add_param('max_time_step_splits', 0,
-                       'Max number of times to halve the lenght of the '
-                       'implicit time step, should Newton''s method fail to '
-                       'converge.')
 
-    probdata.add_param('newton_max_iter', 30, 'Max iterations for Newton''s '
-                       'method before enforcing reduction criterion')
-    probdata.add_param('newton_reduction_factor', .5, 'Required reduction in '
-                       'residual norm for Newton''s method to continue beyond '
-                       'newton_max_iter iterations')
+    probdata.add_param('newton_max_iter', 30, 'Max iterations for Newton''s method')
     probdata.add_param('newton_tolerance', .1e-8, 'Newton''s method stops when '
                        'norm(delta(iterate)) is below this.')
     probdata.add_param('newton_verbosity', 1, 'Logging level for Newton''s method')
     
-    probdata.add_param('cg_tolerance', 1e-12, 'CG or BiCGStab terminate when '
+    probdata.add_param('linear_solver_tolerance', 1e-12, 'CG or BiCGStab terminate when '
                        'norm(residual) is below this.')
-    probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
+    probdata.add_param('linear_solver_verbosity', 1, 'Logging level for CG/BiCGStab')
 
     probdata.add_param('bc_options_eqn1', ['03', '13'])
     

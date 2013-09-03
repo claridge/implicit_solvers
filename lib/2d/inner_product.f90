@@ -17,7 +17,7 @@ double precision function inner_product(u, v)
 
     inner_product = 0.d0
     do ieqn = 1, meqn
-        !$omp parallel do reduction(+ : inner_product) private(ix)
+        !$omp parallel do reduction(+ : inner_product) private(ix, iy)
         do iy = 1, my
             do ix = 1, mx
                 inner_product = inner_product + u(ix, iy, ieqn) * v(ix, iy, ieqn) * dx * dy

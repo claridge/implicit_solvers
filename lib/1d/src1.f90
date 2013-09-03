@@ -12,8 +12,11 @@ subroutine src1(maxmx, meqn, mbc, mx, x_lower, dx, q, maux, aux, t, dt)
     logical :: success
 
     character :: implicit_integration_scheme
-    integer :: max_time_step_splits
-    common /implicit_config/ implicit_integration_scheme, max_time_step_splits
+    common /implicit_config/ implicit_integration_scheme
+
+    ! Not currently exposed.  If >0. we'll taking two halved time steps should
+    ! Newton's method fail to converge.
+    integer :: max_time_step_splits=0
         
     
     ! Clawpack currently gives src1 the time at the *end* of the step.
@@ -40,18 +43,19 @@ subroutine src1(maxmx, meqn, mbc, mx, x_lower, dx, q, maux, aux, t, dt)
  
         if (success) then
             t_local  = t_local + dt_local
-        else
-            dt_local = dt_local / 2.d0
+        else if (max_time_step_splits > 0) then
             n_splits = n_splits + 1
-            print *, 'Splitting time step'
-
             if (n_splits > max_time_step_splits) then
-                print *, 'src1: Implicit step failed with maximum number of ',  &
-                    'dt splits; aborting.'
+                print *, "src1: Implicit step failed with maximum number of ",  &
+                    "dt splits; aborting."
                 stop
             end if
+            dt_local = dt_local / 2.d0
+            print *, "src1: Implicit step failed; retrying with dt = ", dt_local
+        else
+            print *, "src1: Implicit step failed; aborting."
+            stop
         end if
-    
     end do
     
 end subroutine src1

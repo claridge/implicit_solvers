@@ -19,8 +19,8 @@ subroutine get_laplacian(q, q_laplacian)
     do iy = 2-mbc,my+mbc-1
         do ix = 2-mbc,mx+mbc-1
             q_laplacian(ix,iy) = (q(ix-1,iy) - 2.d0*q(ix,iy) + q(ix+1,iy)) / dx**2
-            q_laplacian(ix,iy) = q_laplacian(ix,iy) + (q(ix,iy-1) - 2.d0*q(ix,iy) +  &
-                                 q(ix,iy+1)) / dy**2
+            q_laplacian(ix,iy) = q_laplacian(ix,iy) +  &
+                                 (q(ix,iy-1) - 2.d0*q(ix,iy) + q(ix,iy+1)) / dy**2
         end do
     end do
     

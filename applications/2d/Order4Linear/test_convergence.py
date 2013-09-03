@@ -1,4 +1,5 @@
 from numpy import *
+import os
 import pyclaw.data
 import unittest
 import lib.python.convergence_test as convergence_test
@@ -9,15 +10,16 @@ def BuildRunData():
 
   probdata = rundata.new_UserData(name='probdata', fname='setprob.data')
   probdata.add_param('implicit_integration_scheme', 'Crank-Nicolson')
-  probdata.add_param('max_time_step_splits', 0)
   probdata.add_param('newton_max_iter', 10)
-  probdata.add_param('newton_reduction_factor', .5)
   probdata.add_param('newton_tolerance', 1e-8)
-  probdata.add_param('newton_verbosity', 0)
-  probdata.add_param('cg_tolerance', 1e-8)
-  probdata.add_param('cg_verbosity', 0)
-  probdata.add_param('num_threads', 1)
-  
+  probdata.add_param('newton_verbosity', 1)
+  probdata.add_param('linear_solver_tolerance', 1e-8)
+  probdata.add_param('linear_solver_verbosity', 1)
+
+  # Set num_threads based on environment variable NUM_THREADS, if defined.
+  probdata.add_param('num_threads',
+                     int(os.environ.get('NUM_THREADS', 1)))
+                       
   probdata.add_param('bc_options', ['13', '13', '03', '03'])
 
   clawdata = rundata.clawdata

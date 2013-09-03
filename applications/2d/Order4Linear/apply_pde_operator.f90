@@ -19,9 +19,17 @@ subroutine apply_pde_operator(t, q, output)
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc, meqn), intent(out) :: output
 
     double precision, dimension(1-mbc:mx+mbc, 1-mbc:my+mbc) :: q_laplacian
+    integer :: ix, iy
+    
 
     call get_laplacian(q(:,:,1), q_laplacian)    
     call get_laplacian(q_laplacian, output(:,:,1))
-    output = -output
+
+    !$omp parallel do private(ix)
+    do iy = 1, my
+        do ix = 1, mx
+            output(ix, iy, 1) = -output(ix, iy, 1)
+        end do
+    end do
     
 end subroutine apply_pde_operator

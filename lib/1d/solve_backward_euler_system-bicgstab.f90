@@ -7,7 +7,7 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
 ! The implementation is taken from Algorithm 7.7 of Y. Saad, Iterative Methods
 ! for Sparse Linear Systems, 2nd Ed.
 !
-! The algorithm will continue until either norm(residual) < cg_tolerance,
+! The algorithm will continue until either norm(residual) < linear_solver_tolerance,
 ! or max_iter iterations have been performed.
 !
 ! Args:
@@ -27,9 +27,9 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
     double precision :: x_lower, dx
     common /claw_config/ mx, mbc, x_lower, dx, meqn
 
-    double precision :: cg_tolerance
-    integer :: cg_verbosity
-    common /cg_config/ cg_tolerance, cg_verbosity
+    double precision :: linear_solver_tolerance
+    integer :: linear_solver_verbosity
+    common /cg_config/ linear_solver_tolerance, linear_solver_verbosity
 
     double precision, intent(in) :: t, dt
     double precision, intent(in), dimension(1-mbc:mx+mbc, meqn) :: iterate
@@ -56,8 +56,8 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
     r_dot_r_star = inner_product(r, r_star)
     residual_norm = sqrt(r_dot_r_star)  ! Using r_star = r
 
-    if (residual_norm <= cg_tolerance) then
-        if (cg_verbosity > 0) then
+    if (residual_norm <= linear_solver_tolerance) then
+        if (linear_solver_verbosity > 0) then
             print '(A)', 'BiCGStab finished without iterating'
         end if
         return
@@ -70,7 +70,7 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
         
         ! TODO: Not sure if this is reasonable.
         if (denominator == 0.d0 .or. alpha == 0.d0) then
-            if (cg_verbosity > 0) then
+            if (linear_solver_verbosity > 0) then
                 print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition, ',  &
                     'but reporting success anyway with residual_norm = ', residual_norm, '.'
             end if
@@ -89,7 +89,7 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
         denominator = inner_product(As, As)        
         omega = inner_product(As, s) / denominator
         if (denominator == 0.d0 .or. omega == 0.d0) then
-            if (cg_verbosity > 0) then
+            if (linear_solver_verbosity > 0) then
                 print '(A,A,E16.10,A)', 'BiCGStab reached degenerate condition, ',  &
                     'but reporting success anyway with residual_norm = ', residual_norm, '.'
             end if
@@ -106,8 +106,8 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
         end do
 
         residual_norm = sqrt(inner_product(r, r))
-        if (residual_norm <= cg_tolerance) then
-            if (cg_verbosity > 0) then
+        if (residual_norm <= linear_solver_tolerance) then
+            if (linear_solver_verbosity > 0) then
                 print '(A,I5,A,E16.10)', 'BiCGStab completed after ', iter,  &
                     ' iterations with norm(residual) = ', residual_norm
             end if
@@ -127,13 +127,13 @@ subroutine solve_backward_euler_system(t, dt, iterate, perturbation, residual_no
             end do
         end do
 
-        if (cg_verbosity > 1) then
+        if (linear_solver_verbosity > 1) then
             print '(A,I4,A,E16.10)', 'Iteration ', iter, ': residual_norm = ',  &
                 residual_norm
         end if
     end do
     
-    if (cg_verbosity > 0) then
+    if (linear_solver_verbosity > 0) then
         print '(A,I5,A,E16.10)', 'BiCGStab gave up after ', max_iter,  &
             ' iterations with norm(residual) = ', residual_norm
     end if

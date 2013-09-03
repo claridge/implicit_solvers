@@ -37,23 +37,15 @@ def setrun(claw_pkg='classic'):
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
 
     probdata.add_param('implicit_integration_scheme', 'Crank-Nicolson')
-    probdata.add_param('max_time_step_splits', 2,
-                       'Max number of times to halve the lenght of the '
-                       'implicit time step, should Newton''s method fail to '
-                       'converge.')
 
-    probdata.add_param('newton_max_iter', 100,
-                       'Max iterations for Newton''s method before enforcing reduction criterion')
-    probdata.add_param('newton_reduction_factor', .5,
-                       'Required reduction in residual norm for Newton''s method to continue '
-                       'beyond newton_max_iter iterations')
+    probdata.add_param('newton_max_iter', 30, 'Max iterations for Newton''s method')
     probdata.add_param('newton_tolerance', 1e-4,
                        'Newton''s method stops when norm(delta(iterate)) is below this.')
     probdata.add_param('newton_verbosity', 2, 'Logging level for Newton''s method')
     
-    probdata.add_param('cg_tolerance', 1e-4,
+    probdata.add_param('linear_solver_tolerance', 1e-4,
                        'CG or BiCGStab terminate when norm(residual) is below this.')
-    probdata.add_param('cg_verbosity', 1, 'Logging level for CG/BiCGStab')
+    probdata.add_param('linear_solver_verbosity', 1, 'Logging level for CG/BiCGStab')
 
     probdata.add_param('num_threads', 4, 'Number of OpenMP threads.')
     
