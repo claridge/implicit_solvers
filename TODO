@@ -1,9 +1,5 @@
-Necessary:
-- Usable setrun.py for each application
-
 Would be nice:
 - Sanity-check when periodic BCs are specified
-- Better logging when max_time_steps=0
 - Update setenv.csh like setenv.bash
 - Expose initial guess for newton's method?
 - Control params with environment variables
