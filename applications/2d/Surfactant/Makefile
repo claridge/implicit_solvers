@@ -32,8 +32,8 @@ FFLAGS ?= -O3 -fopenmp -fno-align-commons
 IMPLICIT_LIB=$(IMPLICIT_CLAW)/lib
 
 CLAW_SOURCES = \
-  boundary_conditions.f90 \
-  initial_conditions.f90 \
+  set_implicit_boundary_data.f90 \
+  qinit.f90 \
   apply_pde_operator.f90 \
   setprob.f90 \
 	surface_tension_utils.f90 \

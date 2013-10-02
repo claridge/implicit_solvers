@@ -32,8 +32,8 @@ IMPLICIT_LIB = $(IMPLICIT_CLAW)/lib/1d
 
 CLAW_SOURCES = \
   apply_pde_operator.f90 \
-	boundary_conditions.f90 \
-	initial_conditions.f90 \
+	set_implicit_boundary_data.f90 \
+	qinit.f90 \
   setprob.f90 \
   true_solution.f90 \
   $(IMPLICIT_LIB)/builtin_bc_routines.f90 \

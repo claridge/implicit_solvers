@@ -1,14 +1,63 @@
-Environment variables
-=====================
-Running this code requires that you:
-1. Set up environment variables for Clawpack;
-2. Set the environment variables in setenv.bash/setenv.csh.
-For setenv.bash, you can "source setenv.bash" to do this.  If I recall correctly, this doesn't work for setenv.csh, and you have to execute the commands directly (or perhaps in your .cshrc file).  But my csh is atrocious -- the bash case is much better tested here.
+Background
+==========
+This package is an extension of Clawpack (Conservation LAWs PACKage) version 4.6, http://www.clawpack.org, designed for solving PDEs up to fourth-order with implicit solvers.  Design and relevant mathematical background are described in paper currently submitted to the SIAM Journal on Scientific Computing for review.  While the paper is not publicly available at the moment, please contact Jonathan Claridge (claridge@gmail.com) if you are interested.
 
 
-Implementing a new problem
+Installation
+============
+This package is an extension of Clawpack (Conservation LAWs PACKage) version 4.6, http://www.clawpack.org.
+
+1. Install Clawpack version 4.6.x.  Instructions are available at:
+  http://depts.washington.edu/clawpack/users-4.6/installing.html
+This package's dependencies are the same as Clawpack's, with one exception: Python 2.7 is required in order to run the automated tests (via the unittest module).
+
+2. Download this code to any location.
+
+3. Make sure that you have defined Clawpack's environment variables, as described by its installation instructions.  (E.g. try "echo $CLAW" in your terminal; if the result is nonempty, then you've probably set them up correctly.)
+
+4. Define the environment variables for this package, by running either "source setenv.bash" if you are using the bash shell, or "source setenv.csh" if you are using csh.  As with Clawpack's own setenv scripts, you can copy the relevant commands into your .bashrc or .cshrc file (or potentially .profile on a Mac) to define these variables each time you open a new terminal.
+
+
+Testing your installation
+=========================
+First, be sure that your base Clawpack installation is running properly by following the procedures in the "Testing your installation and running an example" of its installation doc.
+
+Next, assuming you have Python 2.7 installed, navigate in a terminal to the same directory as this README and enter
+    python -m unittest discover
+This will run a suite of automated tests that involve compiling and running all of the applications compatible with automated test suite.  Be aware that these scripts also clean up after themselves, deleting compiled code and output files.  (They are designed primarily to guard against submitting bugs to the code base.)
+
+If you don't have Python 2.7 installed (e.g. you're only running version 2.5), or if you want a more interactive example, go to any leaf directory under "applications" in a terminal.  Then enter
+    make .plots
+to compile the application code, run it, and generate plots.
+
+
+Building a new application
 ==========================
-TODO
+These instructions are an overview of developing a relatively simple application code.  They have not been rigorously tested yet, and are meant to be expanded upon as the opportunity arises.  Please email claridge@gmail.com with comments, suggestions, etc.
+
+1. Choose the provided application code that is most similar to the one you want to solve, and copy its directory/contents to a new location.  (It's probably easiest to stay within the same subdirectory for starters, as you won't have to edit paths in the Makefile.)
+
+2. In your new directory, delete __init__.py and test_convergence.py from your new directory.  These are only relevant to the automated tests.  If your problem does not have a known analytical solution, then delete true_solution.f90 as well, and remove the line that refers to it from your copy of the Makefile.
+
+3. For each remaining .f90 file, customize it to your problem of interest.  These files are:
+    qinit.f90
+    set_implicit_boundary_data.f90.f90
+    apply_pde_operator.f90
+    apply_linearized_pde_operator.f90 (only if needed)
+    setprob.f90
+The subroutines they define are described in the associated paper.  (TODO: Reference when available, or better yet customize descriptions to docs here.)
+
+4. Modify setrun.py appropriately for your application.  Clawpack's own example applications provide comment-heavy versions that describe all parameters in place.  Parameters specific to this package are prefaced by "probdata.add_param" and are described in the associated paper.
+
+You might also try tweaking these parameters in the existing applications, then running "make .plots" to see the end results.
+
+5. In a terminal, enter:
+    make xclaw
+to compile your code.  If this succeeds, enter
+    make .output
+to run it and generate output files.
+
+6. Plotting: Plot formats are defined by setplot.py, and you can customize this to suit your needs.  Again, experimenting with the existing application codes is one of the best ways to figure out how this works.
 
 
 Naming conventions
@@ -16,8 +65,8 @@ Naming conventions
 Fortran files generally define one subroutine and are named in the form routine_name.f90.  If a given routine has natural variants, the pattern routine_name-variant.f90.  For example, solve_backward_euler_system-bicgstab.f90 defines the subroutine solve_backward_euler_system using the BiCGStab solver. 
 
 
-Testing
-=======
+Automated test cases
+====================
 Each test case is a script named test_convergence.py.  They are built on the unittest module and require features that were made available in Python 2.7.
 
 Tests may be run individually by a simple invocation of 
