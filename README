@@ -1,6 +1,8 @@
 Background
 ==========
-This package is an extension of Clawpack (Conservation LAWs PACKage) version 4.6, http://www.clawpack.org, designed for solving PDEs up to fourth-order with implicit solvers.  Design and relevant mathematical background are described in paper currently submitted to the SIAM Journal on Scientific Computing for review.  While the paper is not publicly available at the moment, please contact Jonathan Claridge (claridge@gmail.com) if you are interested.
+This package is an extension of Clawpack (Conservation LAWs PACKage) version 4.6, http://www.clawpack.org, by Randall J. LeVeque (University of Washington) and others.  Clawpack is freely available under a BSD license.
+
+This extension is designed for solving PDEs up to fourth-order with implicit solvers.  Design and relevant mathematical background are described in paper currently submitted to the SIAM Journal on Scientific Computing for review.  While the paper is not publicly available at the moment, please contact Jonathan Claridge (claridge@gmail.com) if you are interested.
 
 
 Installation
