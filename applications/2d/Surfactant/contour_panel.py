@@ -1,5 +1,5 @@
 import sys
-from lib.python.claw_solution_2d import ClawSolution
+from implicit_claw.python.claw_solution_2d import ClawSolution
 import pylab
 
 # Set plot parameters

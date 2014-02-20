@@ -9,8 +9,8 @@ import os
 import inspect
 import types
 
-import lib.python.claw_solution_1d as claw_solution_1d
-import lib.python.claw_solution_2d as claw_solution_2d
+import implicit_claw.python.claw_solution_1d as claw_solution_1d
+import implicit_claw.python.claw_solution_2d as claw_solution_2d
 
 
 class ConvergenceTestError(Exception):

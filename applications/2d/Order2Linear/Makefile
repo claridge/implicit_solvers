@@ -29,7 +29,7 @@ FFLAGS ?= -O3 -fno-align-commons
 # List of sources for this program:
 # ---------------------------------
 
-IMPLICIT_LIB=../../../lib
+IMPLICIT_LIB=$(IMPLICIT_CLAW)/implicit_claw
 
 CLAW_SOURCES = \
   apply_linearized_pde_operator.f90 \

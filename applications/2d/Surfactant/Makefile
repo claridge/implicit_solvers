@@ -29,7 +29,7 @@ FFLAGS ?= -O3 -fopenmp -fno-align-commons
 # List of sources for this program:
 # ---------------------------------
 
-IMPLICIT_LIB=$(IMPLICIT_CLAW)/lib
+IMPLICIT_LIB=$(IMPLICIT_CLAW)/implicit_claw
 
 CLAW_SOURCES = \
   set_implicit_boundary_data.f90 \

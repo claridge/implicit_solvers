@@ -2,7 +2,7 @@ from numpy import *
 import os
 import pyclaw.data
 import unittest
-import lib.python.convergence_test as convergence_test
+import implicit_claw.python.convergence_test as convergence_test
 
 
 def BuildRunData():
