@@ -48,7 +48,7 @@ subroutine apply_pde_operator(t, q, output)
               + h_face**2 / 2.d0 * surface_tension_x
 
             x_flux(ix, iy, 2) = h_face * g_face * surface_tension_x - delta * g_x  &
-              + kappa * h_face**2 / 2.d0 * h_laplacian_x * g_face
+              +  h_face**2 / 2.d0 * (-beta * g_face * h_x + kappa * h_laplacian_x * g_face)
         end do
     end do
 
@@ -67,7 +67,7 @@ subroutine apply_pde_operator(t, q, output)
               + h_face**2 / 2.d0 * surface_tension_y
 
             y_flux(ix, iy, 2) = h_face * g_face * surface_tension_y - delta * g_y  &
-              + kappa * h_face**2 / 2.d0 * h_laplacian_y * g_face
+              + h_face**2 / 2.d0 * (-beta * g_face * h_y + kappa *  h_laplacian_y * g_face)
        end do
     end do
 
